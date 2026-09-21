@@ -117,24 +117,173 @@ body.entrada-direta .intro-splash {
 }
 
 body.entrada-direta .manifesto-box,
-html.entrada-direta .manifesto-box {
+html.entrada-direta .manifesto-box,
+body.entrada-direta main:nth-of-type(1) > section:nth-of-type(1),
+html.entrada-direta main:nth-of-type(1) > section:nth-of-type(1),
+main:nth-of-type(1) > section:nth-of-type(1) {
   position: static !important;
   inset: auto !important;
-  width: 100%;
+  width: 94%;
   max-width: 1140px;
   min-height: 0 !important;
   height: auto !important;
   display: block !important;
   margin: 30px auto;
-  padding: 25px 30px;
+  padding: 25px 30px 38px;
   border-radius: 12px;
-  background: linear-gradient(180deg, #1f2e49, #082f49);
-  border: 2px solid #1a19198c;
-  box-shadow: 0 4px 10px rgba(8, 47, 73, 0.12);
+  background: #000000 !important;
+  border: 2px solid #ffffff !important;
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.34) !important;
   opacity: 1 !important;
   transform: none !important;
   animation: none !important;
   pointer-events: auto;
+  color: #ffffff !important;
+  box-sizing: border-box !important;
+}
+
+body.entrada-direta .manifesto-box:hover,
+html.entrada-direta .manifesto-box:hover,
+body.entrada-direta main:nth-of-type(1) > section:nth-of-type(1):hover,
+html.entrada-direta main:nth-of-type(1) > section:nth-of-type(1):hover {
+  border-color: #ffffff !important;
+  background: #000000 !important;
+  color: #ffffff !important;
+}
+
+body.entrada-direta main:nth-of-type(1) > section:nth-of-type(1) > h2#manifesto-titulo,
+html.entrada-direta main:nth-of-type(1) > section:nth-of-type(1) > h2#manifesto-titulo,
+body.entrada-direta .manifesto-box > .p1,
+html.entrada-direta .manifesto-box > .p1 {
+  width: 100% !important;
+  margin: 0 0 12px !important;
+  font-family: "Merriweather", serif !important;
+  font-size: clamp(2rem, 4vw, 3.5rem) !important;
+  font-weight: 700 !important;
+  line-height: 1.1 !important;
+  text-align: left !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
+  transform: none !important;
+  display: block !important;
+  max-height: none !important;
+}
+
+body.entrada-direta main:nth-of-type(1) > section:nth-of-type(1) > h2#manifesto-titulo .titulo-icone,
+html.entrada-direta main:nth-of-type(1) > section:nth-of-type(1) > h2#manifesto-titulo .titulo-icone,
+body.entrada-direta .manifesto-box > .p1 .titulo-icone,
+html.entrada-direta .manifesto-box > .p1 .titulo-icone {
+  color: #ffffff !important;
+  display: inline-block !important;
+}
+
+body.entrada-direta main:nth-of-type(1) > section:nth-of-type(1) > h2#manifesto-titulo:nth-of-type(1) > i:nth-of-type(1) > strong:nth-of-type(1),
+html.entrada-direta main:nth-of-type(1) > section:nth-of-type(1) > h2#manifesto-titulo:nth-of-type(1) > i:nth-of-type(1) > strong:nth-of-type(1),
+main:nth-of-type(1) > section:nth-of-type(1) > h2#manifesto-titulo:nth-of-type(1) > i:nth-of-type(1) > strong:nth-of-type(1),
+body.entrada-direta .manifesto-box > .p1 .frase-chave,
+html.entrada-direta .manifesto-box > .p1 .frase-chave {
+  color: #ffffff !important;
+  font-family: "Merriweather", serif !important;
+  font-weight: 700 !important;
+  text-shadow: none !important;
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  clip-path: none !important;
+  display: block !important;
+  width: max-content !important;
+  max-width: 100% !important;
+  position: relative !important;
+  letter-spacing: normal !important;
+}
+
+body.entrada-direta main:nth-of-type(1) > section:nth-of-type(1) > h2#manifesto-titulo:nth-of-type(1) > i:nth-of-type(1) > strong:nth-of-type(1)::after,
+html.entrada-direta main:nth-of-type(1) > section:nth-of-type(1) > h2#manifesto-titulo:nth-of-type(1) > i:nth-of-type(1) > strong:nth-of-type(1)::after,
+main:nth-of-type(1) > section:nth-of-type(1) > h2#manifesto-titulo:nth-of-type(1) > i:nth-of-type(1) > strong:nth-of-type(1)::after,
+body.entrada-direta .manifesto-box > .p1 .frase-chave::after,
+html.entrada-direta .manifesto-box > .p1 .frase-chave::after {
+  content: "" !important;
+  display: block !important;
+  position: static !important;
+  width: 100% !important;
+  height: 4px !important;
+  margin-top: 12px !important;
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+body.entrada-direta .manifesto-box .manifesto-texto,
+html.entrada-direta .manifesto-box .manifesto-texto,
+body.entrada-direta .manifesto-box .manifesto-texto b,
+html.entrada-direta .manifesto-box .manifesto-texto b,
+body.entrada-direta .manifesto-box .manifesto-texto strong,
+html.entrada-direta .manifesto-box .manifesto-texto strong,
+body.entrada-direta .manifesto-box .manifesto-texto b i,
+html.entrada-direta .manifesto-box .manifesto-texto b i,
+body.entrada-direta .manifesto-box .manifesto-texto strong i,
+html.entrada-direta .manifesto-box .manifesto-texto strong i {
+  color: #ffffff !important;
+}
+
+body.entrada-direta .manifesto-box .prefacio-cascata,
+html.entrada-direta .manifesto-box .prefacio-cascata,
+body.entrada-direta main:nth-of-type(1) > section:nth-of-type(1) > .prefacio-cascata,
+html.entrada-direta main:nth-of-type(1) > section:nth-of-type(1) > .prefacio-cascata {
+  max-height: 190px !important;
+  margin-top: 42px !important;
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  display: block !important;
+  visibility: visible !important;
+}
+
+@media (max-width: 768px) {
+  body.entrada-direta .manifesto-box .prefacio-cascata,
+  html.entrada-direta .manifesto-box .prefacio-cascata,
+  body.entrada-direta main:nth-of-type(1) > section:nth-of-type(1) > .prefacio-cascata,
+  html.entrada-direta main:nth-of-type(1) > section:nth-of-type(1) > .prefacio-cascata {
+    margin-top: 24px !important;
+  }
+}
+
+body.entrada-direta .manifesto-box .prefacio-cascata span,
+html.entrada-direta .manifesto-box .prefacio-cascata span,
+body.entrada-direta main:nth-of-type(1) > section:nth-of-type(1) > .prefacio-cascata span,
+html.entrada-direta main:nth-of-type(1) > section:nth-of-type(1) > .prefacio-cascata span {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  clip-path: inset(0 0 0 0) !important;
+  display: block !important;
+  visibility: visible !important;
+  color: #ffffff !important;
+}
+
+body.entrada-direta .manifesto-box .prefacio-cascata strong,
+html.entrada-direta .manifesto-box .prefacio-cascata strong,
+body.entrada-direta main:nth-of-type(1) > section:nth-of-type(1) > .prefacio-cascata strong,
+html.entrada-direta main:nth-of-type(1) > section:nth-of-type(1) > .prefacio-cascata strong {
+  color: #b11226 !important;
+  text-shadow: 0 0 0 rgba(177, 18, 38, 0);
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  clip-path: inset(0 0 0 0) !important;
+  display: block !important;
+  visibility: visible !important;
+  animation: prefacioCascata 0.9s 0.45s cubic-bezier(0.22, 1, 0.36, 1) both, sangueEscorrendo 2.6s 1.35s ease-in-out infinite !important;
+}
+
+body.entrada-direta .manifesto-box .prefacio-cascata strong::after,
+html.entrada-direta .manifesto-box .prefacio-cascata strong::after,
+body.entrada-direta main:nth-of-type(1) > section:nth-of-type(1) > .prefacio-cascata strong::after,
+html.entrada-direta main:nth-of-type(1) > section:nth-of-type(1) > .prefacio-cascata strong::after {
+  background: #b11226 !important;
+  box-shadow: 0.55em 0.18em 0 #b11226, 1.35em 0.08em 0 #b11226, 2.2em 0.3em 0 #b11226 !important;
+  animation: gotasDeSangue 2.6s 1.35s ease-in-out infinite !important;
 }
 
 .intro-splash img {
@@ -784,6 +933,19 @@ h1,
   user-select: none;
 }
 
+.home-loading-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  z-index: 2500;
+  pointer-events: none;
+  opacity: 0;
+  background: rgba(11, 93, 79, 0.25);
+  transition: opacity 0.2s ease;
+}
+
 .home-loading-bar span {
   display: block;
   width: 0;
@@ -1247,12 +1409,17 @@ body.prefacio-em-foco .manifesto-box.prefacio-abertura-encerrada {
   font-size: 18px;
 }
 
+main:nth-of-type(1) > section:nth-of-type(2) > article:nth-of-type(1) > h3:nth-of-type(1),
+main:nth-of-type(1) > section:nth-of-type(2) > article:nth-of-type(2) > h3:nth-of-type(1),
+main:nth-of-type(1) > section:nth-of-type(2) > article:nth-of-type(3) > h3:nth-of-type(1),
 .bloco h3 {
   margin: 0 0 12px;
   font-family: "Oswald", sans-serif;
   font-weight: 400;
   font-size: 28px;
   color: #d5e7eb;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .bloco p {
@@ -1909,15 +2076,24 @@ p + p {
     white-space: normal;
   }
 
+  main:nth-of-type(1) > section:nth-of-type(1),
+  body.entrada-direta main:nth-of-type(1) > section:nth-of-type(1),
+  html.entrada-direta main:nth-of-type(1) > section:nth-of-type(1),
+  body.entrada-direta .manifesto-box,
+  html.entrada-direta .manifesto-box,
   .manifesto-box,
   .box-int {
-    width: 94%;
+    width: 94% !important;
+    max-width: 100% !important;
     padding: 18px 16px;
-    margin: 20px auto;
+    margin: 20px auto !important;
+    box-sizing: border-box !important;
   }
 
+  main:nth-of-type(1) > section:nth-of-type(1),
+  body.entrada-direta main:nth-of-type(1) > section:nth-of-type(1),
   .manifesto-box.prefacio-ativo {
-    padding-bottom: 38px;
+    padding-bottom: 38px !important;
     background: #000000;
     color: #ffffff;
   }
@@ -1989,9 +2165,10 @@ p + p {
   .manifesto-box.prefacio-ativo .prefacio-cascata strong {
     width: 100%;
     max-width: 100%;
-    font-size: clamp(2.8rem, 14vw, 4.5rem);
-    line-height: 0.9;
-    white-space: nowrap;
+    font-size: clamp(2.4rem, 12vw, 4.5rem);
+    line-height: 0.95;
+    white-space: normal;
+    word-break: break-word;
   }
 
   .manifesto-texto,
@@ -2082,10 +2259,12 @@ p + p {
   }
 
   h3 {
-    font-size: clamp(2rem, 8vw, 2.8rem);
-    line-height: 1.08;
+    font-size: clamp(1.6rem, 7vw, 2.5rem);
+    line-height: 1.15;
     text-align: left;
-    white-space: nowrap;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
   }
 
   .bloco-1v img,
@@ -2107,6 +2286,20 @@ p + p {
 }
 
 @media (max-width: 480px) {
+  main:nth-of-type(1) > section:nth-of-type(1),
+  body.entrada-direta main:nth-of-type(1) > section:nth-of-type(1),
+  html.entrada-direta main:nth-of-type(1) > section:nth-of-type(1),
+  body.entrada-direta .manifesto-box,
+  html.entrada-direta .manifesto-box,
+  .manifesto-box,
+  .box-int {
+    width: 94% !important;
+    max-width: 100% !important;
+    margin: 16px auto !important;
+    padding: 16px 14px 34px !important;
+    box-sizing: border-box !important;
+  }
+
   h1 {
     font-size: clamp(15px, 4.4vw, 18px);
     letter-spacing: 0.01em;

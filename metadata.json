@@ -1,0 +1,6 @@
+{
+  "name": "Crepúsculo Esmeralda",
+  "description": "Reflexão crítica sobre a origem, a estrutura e os caminhos de transformação do Brasil.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
