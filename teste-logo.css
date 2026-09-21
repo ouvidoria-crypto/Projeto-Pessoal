@@ -54,9 +54,13 @@ html .topo .logo-wrap.teste-logo-zoom .logo {
   transition: opacity 0.25s ease, transform var(--teste-logo-tempo) var(--teste-logo-curva);
 }
 
-/* Entrada: troca imediata (o quadro inicial do vídeo é praticamente igual à logo estática) e zoom em sincronia. */
+/* Entrada: troca imediata (o quadro inicial do vídeo é praticamente igual à logo estática). */
 .teste-logo-video.is-on {
   opacity: 1;
-  transform: scale(var(--teste-logo-zoom));
   transition: opacity 0s, transform var(--teste-logo-tempo) var(--teste-logo-curva);
+}
+
+/* Zoom em sincronia com a imagem estática (controlado pela classe do .logo-wrap). */
+.logo-wrap.teste-logo-zoom .teste-logo-video {
+  transform: scale(var(--teste-logo-zoom));
 }
