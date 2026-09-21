@@ -81,6 +81,7 @@
     body: document.body,
     metaTheme: document.querySelector('meta[name="theme-color"]'),
     introOverlay: document.querySelector('.intro-overlay'),
+    introLoadingBar: null,
     introTextBox: document.querySelector('.intro-overlay__text-box'),
     introAccordion: document.querySelector('.intro-overlay__accordion'),
     topo: document.querySelector('.topo'),
@@ -110,6 +111,29 @@
   // 4. CONTROLADOR VISUAL & METATAGS
   // =========================================================================
   const ViewController = {
+    // Barra de transição: injeta uma única barra no overlay e reinicia o preenchimento por fase.
+    createIntroLoadingBar(duration) {
+      if (!DOM.introOverlay) return null;
+
+      DOM.introLoadingBar?.remove();
+      const loadingBar = document.createElement('div');
+      loadingBar.className = 'intro-loading-bar';
+      loadingBar.setAttribute('aria-hidden', 'true');
+      loadingBar.style.setProperty('--intro-loading-duration', `${duration}ms`);
+      DOM.introOverlay.append(loadingBar);
+      DOM.introLoadingBar = loadingBar;
+      return loadingBar;
+    },
+
+    startIntroLoadingBar(duration) {
+      const loadingBar = this.createIntroLoadingBar(duration);
+      if (!loadingBar) return;
+
+      // AJUSTE: a leitura separa width: 0 de width: 100% sem depender de requestAnimationFrame.
+      void loadingBar.offsetWidth;
+      loadingBar.classList.add('is-filling');
+    },
+
     // Alinhamento: copia as coordenadas e a altura finais do manifesto real para o overlay.
     syncIntroToHome() {
       if (!DOM.prefaceBox || !DOM.introTextBox) return;
@@ -120,6 +144,11 @@
       DOM.introTextBox.style.setProperty('--preface-overlay-left', `${homeRect.left}px`);
       DOM.introTextBox.style.setProperty('--preface-width', `${homeRect.width}px`);
       DOM.introTextBox.style.setProperty('--preface-final-height', `${homeRect.height}px`);
+
+      // AJUSTE C: aplica a largura real do manifesto aos boxes-alvo, sem alterar os três blocos de ação.
+      document.querySelectorAll('.box-int, .bloco-1v, .bloco-2v').forEach((box) => {
+        box.style.setProperty('--home-box-width-px', `${homeRect.width}px`);
+      });
 
       // AJUSTE 3: calcula o deslocamento da Fase 1 a partir da altura natural da accordion.
       const accordionHeight = DOM.prefaceBox.querySelector('.prefacio-cascata')?.getBoundingClientRect().height || 0;
@@ -169,12 +198,14 @@
       // A troca de estado faz a logo desaparecer e revela o texto já alinhado à Home.
       LifecycleManager.setState('PREFACE');
       DOM.introOverlay.dataset.introState = 'preface';
+      this.startIntroLoadingBar(duration(timings.PREFACE_MS));
       await LifecycleManager.wait(duration(timings.PREFACE_MS));
 
       // ===== FASE 2: Prefácio (accordion) =====
       // O CSS muda a grade de 0fr para 1fr e revela a frase complementar abaixo do texto.
       LifecycleManager.setState('ACCORDION');
       DOM.introOverlay.dataset.introState = 'accordion';
+      DOM.introLoadingBar?.classList.add('is-complete');
       DOM.body.classList.add('intro-phase-2');
       DOM.root.classList.add('intro-phase-2');
       DOM.introAccordion?.setAttribute('aria-hidden', 'false');
@@ -279,6 +310,26 @@
     init() {
       if (!DOM.menuToggle || !DOM.sidebar || !DOM.sidebarBackdrop) return;
 
+      // AJUSTE A: aquece a sidebar fora do clique para reduzir o custo da primeira abertura.
+      const warmSidebar = () => {
+        DOM.sidebar.classList.add('sidebar-aquecida');
+        DOM.sidebar.querySelectorAll('img').forEach((image) => image.decode?.().catch(() => {}));
+        document.fonts?.load('400 17px Oswald');
+      };
+
+      const scheduleWarmup = () => {
+        if ('requestIdleCallback' in window) {
+          window.requestIdleCallback(warmSidebar, { timeout: 500 });
+        } else {
+          window.setTimeout(warmSidebar, 0);
+        }
+      };
+
+      DOM.menuToggle.addEventListener('pointerenter', warmSidebar, { once: true });
+      DOM.menuToggle.addEventListener('touchstart', warmSidebar, { once: true, passive: true });
+      DOM.menuToggle.addEventListener('focus', warmSidebar, { once: true });
+      scheduleWarmup();
+
       DOM.menuToggle.addEventListener('click', () => {
         const isCurrentlyOpen = DOM.menuToggle.getAttribute('aria-expanded') === 'true';
         this.toggle(!isCurrentlyOpen);
@@ -298,6 +349,8 @@
     },
 
     toggle(open) {
+      // AJUSTE A: will-change fica ativo somente durante a transição da sidebar.
+      DOM.sidebar.classList.add('sidebar-animando');
       DOM.menuToggle.setAttribute('aria-expanded', String(open));
       DOM.sidebar.setAttribute('aria-hidden', String(!open));
 
@@ -313,6 +366,7 @@
       DOM.sidebarBackdrop.hidden = !open;
       DOM.root.classList.toggle('sidebar-aberta', open);
       DOM.body.classList.toggle('sidebar-aberta', open);
+      window.setTimeout(() => DOM.sidebar.classList.remove('sidebar-animando'), open ? 340 : 280);
     },
 
     initModes() {

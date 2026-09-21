@@ -2870,6 +2870,48 @@ html.intro-phase-2 {
   isolation: isolate;
 }
 
+/* Barra de transição: base branca com o degradê/brilho já usado nos indicadores do site. */
+.intro-loading-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 3200;
+  width: 0;
+  height: 3px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 0 7px rgba(217, 196, 106, 0.82), 0 0 16px rgba(11, 93, 79, 0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: width var(--intro-loading-duration, var(--preface-motion-duration)) cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
+}
+
+/* O brilho colorido fica sobre a base branca sem alterar o tamanho da barra. */
+.intro-loading-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #0b5d4f 0%, #91a63a 52%, #d9c46a 78%, #ffffff 100%);
+  opacity: 0.82;
+}
+
+/* FASE 1: a barra aparece e começa vazia assim que o texto inicial entra. */
+.intro-overlay[data-intro-state="preface"] .intro-loading-bar {
+  opacity: 1;
+}
+
+/* FASE 1 -> FASE 2: este preenchimento termina no mesmo instante do estado accordion. */
+.intro-overlay[data-intro-state="preface"] .intro-loading-bar.is-filling {
+  width: 100%;
+}
+
+/* FASE 2: o preenchimento já terminou; apenas a barra desaparece suavemente. */
+.intro-overlay[data-intro-state="accordion"] .intro-loading-bar,
+.intro-overlay[data-intro-state="resolving"] .intro-loading-bar {
+  width: 100%;
+  opacity: 0;
+}
+
 .intro-overlay__logo {
   /* ESTADO INICIAL: logo centralizada; as fases seguintes alteram sua opacity. */
   position: absolute;
@@ -3105,6 +3147,100 @@ html.intro-phase-2 {
   .intro-overlay__text-box,
   .intro-overlay__accordion {
     transition-duration: 0.01ms;
+  }
+}
+
+/* AJUSTE A: sidebar isolada para reduzir custo de pintura e evitar blur/sombra pesada. */
+.sidebar {
+  contain: layout paint style;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 8px 0 24px rgba(0, 0, 0, 0.24);
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.24s ease;
+}
+
+/* AJUSTE A: a abertura torna a sidebar visível sem display:none -> block. */
+.sidebar.is-open {
+  visibility: visible;
+  opacity: 1 !important;
+  pointer-events: auto;
+  transform: translateX(0) !important;
+}
+
+/* AJUSTE A: will-change existe somente durante a animação ativa. */
+.sidebar.sidebar-animando {
+  will-change: transform, opacity;
+}
+
+/* AJUSTE A: backdrop sem backdrop-filter para evitar rasterização pesada na primeira abertura. */
+.sidebar-backdrop {
+  backdrop-filter: none;
+  opacity: 0;
+  transition: opacity 0.24s ease;
+}
+
+.sidebar-backdrop:not([hidden]) {
+  opacity: 1;
+}
+
+/* AJUSTE A: título estático, removendo animação de gradiente dentro da sidebar. */
+.sidebar h2 {
+  background: none;
+  color: #dfe8d8;
+  -webkit-text-fill-color: currentColor;
+  animation: none;
+}
+
+/* AJUSTE A: hover dos itens limitado a cor, opacity e pequeno deslocamento. */
+@media (hover: hover) {
+  .sidebar-modo {
+    transition: color 0.18s ease, opacity 0.18s ease, transform 0.18s ease;
+  }
+
+  .sidebar-modo:hover,
+  .sidebar-modo:focus-visible {
+    border-left-color: #d9c46a;
+    background: transparent;
+    color: #ffffff;
+    opacity: 0.96;
+    outline: none;
+    transform: translateX(4px);
+  }
+}
+
+/* AJUSTE B: usa a mesma coluna do manifesto; o JS compensa o inset visual das barras. */
+.topo .menu-toggle {
+  left: max(18px, calc((100% - var(--preface-width)) / 2));
+}
+
+/* AJUSTE C: boxes de conteúdo usam a largura real do manifesto e preservam sua identidade interna. */
+.box-int,
+.bloco-1v,
+.bloco-2v {
+  width: var(--home-box-width-px, var(--preface-width));
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* AJUSTE C: a mesma largura vence os limites responsivos legados nos boxes-alvo. */
+@media (max-width: 768px) {
+  /* AJUSTE C: o wrapper político acompanha a coluna do manifesto para não estreitar os boxes. */
+  html body main .bloco-1 {
+    width: var(--home-box-width-px, var(--preface-width)) !important;
+    max-width: 1200px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  html body main .box-int,
+  html body main .bloco-1v,
+  html body main .bloco-2v {
+    width: var(--home-box-width-px, var(--preface-width)) !important;
+    max-width: 1200px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
 }
 
