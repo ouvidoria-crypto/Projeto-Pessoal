@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f1f2f" />
+  <meta name="description" content="Crepúsculo Esmeralda: reflexão crítica sobre a origem, a estrutura e os caminhos de transformação do Brasil." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Crepúsculo Esmeralda" />
+  <meta property="og:description" content="Reflexão crítica sobre a origem, a estrutura e os caminhos de transformação do Brasil." />
+  <meta property="og:image" content="OP.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Crepúsculo Esmeralda" />
+  <meta name="twitter:description" content="Reflexão crítica sobre a origem, a estrutura e os caminhos de transformação do Brasil." />
+  <link rel="stylesheet" href="style.css?v=61" />
+  <link rel="icon" type="image/png" href="OP.png" />
+  <script src="script.js?v=21" defer></script>
+  <title>CREPÚSCULO ESMERALDA</title>
+</head>
+<body>
+  <div class="reading-progress" aria-hidden="true"></div>
+  <div class="prefacio-progress" aria-hidden="true"></div>
+  <div class="intro-splash" aria-hidden="true">
+    <img src="OP.png" alt="">
+  </div>
+  <audio id="tema-audio" preload="auto" loop src="TEMA.opus?v=2" type="audio/ogg; codecs=opus"></audio>
+
+  <header class="topo">
+    <div class="home-loading-bar" aria-hidden="true"><span></span></div>
+    <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-controls="sidebar" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="logo-wrap" aria-label="Logo do site">
+      <img class="logo" src="OP.png" alt="Logo do site">
+    </div>
+    <div class="titulo-principal">
+      <h1>CREPÚSCULO ESMERALDA</h1>
+      <p>Movidos pelo potencial infinito do Brasil <img class="bandeira-brasil" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f1e7-1f1f7.png" alt="Bandeira do Brasil" width="38" height="38" decoding="async"></p>
+    </div>
+  </header>
+
+  <div class="sidebar-backdrop" hidden></div>
+  <aside class="sidebar" id="sidebar" aria-label="Navegação principal" aria-hidden="true">
+    <div class="sidebar-cabecalho">
+      <div class="sidebar-marca">
+        <div class="sidebar-marca-texto">
+          <h2>MOVIDOS PELO POTENCIAL INFINITO DO BRASIL</h2>
+        </div>
+      </div>
+      <button class="sidebar-fechar" type="button" aria-label="Fechar menu">×</button>
+    </div>
+
+    <nav class="sidebar-modos" aria-label="Modos do site">
+      <a class="sidebar-modo is-active" href="#manifesto-titulo" data-sidebar-mode="Manifesto">
+        <span class="sidebar-modo-numero">01</span>
+        <span><strong>Manifesto</strong><small>A página inicial</small></span>
+      </a>
+      <a class="sidebar-modo" href="#editorial" data-sidebar-mode="Editorial">
+        <span class="sidebar-modo-numero">02</span>
+        <span><strong>Editorial</strong><small>Ideias em movimento</small></span>
+      </a>
+      <a class="sidebar-modo" href="#colunas" data-sidebar-mode="Colunas">
+        <span class="sidebar-modo-numero">03</span>
+        <span><strong>Colunas</strong><small>Vozes e perspectivas</small></span>
+      </a>
+      <a class="sidebar-modo" href="#noticias-politica" data-sidebar-mode="Notícias de política">
+        <span class="sidebar-modo-numero">04</span>
+        <span><strong>Notícias de política</strong><small>O país em debate</small></span>
+      </a>
+    </nav>
+
+    <section class="sidebar-conta" aria-labelledby="conta-titulo">
+      <span class="sidebar-kicker">Acesso</span>
+      <h3 id="conta-titulo">Sua conta</h3>
+      <p class="sidebar-status" role="status" aria-live="polite">Entre para acompanhar novas publicações.</p>
+      <div class="conta-acoes">
+        <button class="conta-botao conta-entrar" type="button" data-conta-acao="entrar">Entrar</button>
+        <button class="conta-botao conta-cadastrar" type="button" data-conta-acao="cadastrar">Cadastrar</button>
+      </div>
+      <button class="google-botao" type="button" data-conta-acao="google">
+        <span class="google-marca" aria-hidden="true">G</span>
+        Continuar com Google
+      </button>
+      <form class="conta-form" hidden>
+        <h4 class="conta-form-titulo">Entrar</h4>
+        <label class="conta-campo conta-nome-campo" hidden>
+          Nome
+          <input type="text" name="nome" autocomplete="name">
+        </label>
+        <label class="conta-campo">
+          E-mail
+          <input type="email" name="email" autocomplete="email" required>
+        </label>
+        <label class="conta-campo">
+          Senha
+          <input type="password" name="senha" autocomplete="current-password" required>
+        </label>
+        <button class="conta-form-submit" type="submit">Continuar</button>
+      </form>
+    </section>
+  </aside>
+
+  <main>
+  <section class="manifesto-box reveal" aria-labelledby="manifesto-titulo">
+    <h2 id="manifesto-titulo" class="p1"><i><span class="titulo-icone prefacio-icone" aria-hidden="true">§</span><strong class="frase-chave">Prefácio</strong></i></h2>
+    <p class="manifesto-texto">Já passou da hora da revolta mútua e geral dos cidadãos brasileiros. Este manifesto é dedicado a acabar com o estado de anestesia em que a população se encontra e causar uma mudança estrutural no <b><i>modus pensandi</i></b> deste país.</p>
+    <div class="prefacio-cascata" aria-live="polite">
+      <span>O estado natural do ser humano não é a passividade.</span>
+      <strong>É a REVOLTA!</strong>
+    </div>
+  </section>
+
+  <section class="blocos">
+    <article class="bloco reveal">
+      <span>01</span>
+      <h3>Despertar</h3>
+      <p>Romper a indiferença e perceber que a transformação começa no ato de enxergar a realidade sem anestesia.</p>
+    </article>
+
+    <article class="bloco reveal">
+      <span>02</span>
+      <h3>Organizar</h3>
+      <p>Construir consciência coletiva, fortalecer o pensamento crítico e transformar indignação em ação consciente.</p>
+    </article>
+
+    <article class="bloco reveal">
+      <span>03</span>
+      <h3>Revoltar</h3>
+      <p>Não como violência sem sentido, mas como resistência ética, coletiva e estrutural diante da passividade.</p>
+    </article>
+  </section>
+  <div class="box-int reveal">
+    <h2 class="p1"><i><span class="titulo-icone" aria-hidden="true">✦</span><strong class="frase-chave">Gênese Auriverde</strong></i></h2>
+    <div class="intro-texto">
+      <p>Para entender a urgência deste levante, não basta olhar para o abismo do presente. Precisamos voltar a fita e responder com honestidade brutal: <strong class="frase-chave">qual a nossa origem?</strong> Como fomos transformados neste gigante eternamente adormecido? Nossa fundação não foi a de uma nação pensada para emancipar o seu povo, mas sim a de uma imensa feitoria desenhada para a exploração. Nascemos sob o signo da extração, onde as riquezas do nosso solo e o suor da nossa gente sempre serviram para engordar os bolsos de uma pequena e intocável elite — fossem as cortes do passado ou os caciques e oligarquias do presente.</p>
+
+      <p>Ao longo dos séculos, fomos violentamente doutrinados com o mito do "povo pacífico", do brasileiro dócil, da nação abençoada que resolve os seus conflitos sem sobressaltos. Isso é uma mentira histórica. As nossas grandes transições — a Independência, a proclamação da República — foram todas acordos de cúpula, arranjos de gabinete onde os poderosos trocaram de cadeiras enquanto o povo, alheio e excluído, apenas assistia a tudo, anestesiado. O "berço esplêndido" que cantamos cegamente no nosso hino nunca foi uma celebração da nossa grandeza; foi, na verdade, uma canção de ninar inventada pelo próprio sistema para garantir que os explorados nunca acordassem. <strong class="frase-chave">A nossa origem é a de uma sociedade onde a passividade foi imposta primeiro pela força e, depois, perpetuada pela ignorância, pelo pão e circo.</strong></p>
+    </div>
+  </div>
+  <div class="seta-proxima-secao" aria-hidden="true">
+    <span>&#8595;</span>
+  </div>
+  <div class="box-int reveal">
+    <h2 class="p1"><i><span class="titulo-icone" aria-hidden="true">⌖</span><strong class="frase-chave">Onde estamos?</strong></i></h2>
+    <div class="intro-texto">
+      <p>Estamos no fundo de um abismo que fomos ensinados a chamar de lar. A sociedade brasileira não vive; foi condicionada a sobreviver. Geração após geração, aprendemos a engolir o inaceitável e a tratar a miséria, a corrupção e a violência como se fossem traços inevitáveis da nossa cultura. <strong class="frase-chave">O nosso famoso “berço esplêndido” transformou-se num cativeiro confortável.</strong> Politicamente, fomos encurralados num teatro de sombras. A polarização foi aperfeiçoada para nos dividir, esgotar e distrair. Enquanto a população se digladia por falsos messias, <strong class="frase-chave">a verdadeira elite política banqueteia-se com o nosso futuro.</strong> As instituições, muitas vezes, deixam de proteger o cidadão e passam a funcionar como escudos para a impunidade dos poderosos.</p>
+
+      <p>Socialmente, o Brasil sofre de um esgotamento crônico, e isso também é um projeto político. Quem gasta toda a sua energia para pagar as contas e sobreviver ao fim do mês quase não encontra tempo para o pensamento crítico. <strong class="frase-chave">Um povo exausto não questiona; um povo distraído não se organiza.</strong> Chegamos ao ponto em que o messianismo provou o seu fracasso. Acreditamos que um único líder desceria a rampa do Planalto para nos salvar, mas terceirizamos a nossa responsabilidade cívica. <strong class="frase-chave">A mudança não virá de um salvador: começa quando recuperamos a capacidade de pensar, agir e nos organizar.</strong></p>
+    </div>
+  </div>
+
+  <section class="bloco-1">
+    <article class="bloco-1v bloco-com-imagem reveal">
+      <h2 class="p1"><i>Origem Sindical ao Sistema Tradicional</i></h2>
+      <h3>Luis Inácio Lula da Silva</h3>
+      <img src="lula.png" alt="Luis Inácio Lula da Silva" loading="lazy" decoding="async">
+      <p>A tragédia que Lula nos impôs foi, antes de tudo, <strong class="frase-chave">psicológica: ele assassinou a esperança de que a ética pudesse vencer a máquina.</strong> Ele não nasceu no sistema; surgiu do chão de fábrica prometendo ser a foice que cortaria os privilégios da elite de Brasília. Mas, assim que sentiu o peso da caneta e o gosto do poder, <strong class="frase-chave">sua história de lutas foi leiloada em nome da governabilidade.</strong></p>
+
+      <p>Para manter o trono, ele abraçou as mesmas oligarquias e os mesmos caciques que jurava destruir. <strong class="frase-chave">O Mensalão e o Petrolão não foram acidentes de percurso; foram o pedágio pago para que ele pudesse operar a velha política com uma eficiência macabra.</strong> O seu legado mais destrutivo não é apenas econômico, mas moral: <strong class="frase-chave">ele convenceu milhões de brasileiros de que a corrupção é um “mal necessário” para que o Estado funcione.</strong> Ele pegou o desejo legítimo de justiça social e transformou-o num balcão de negócios.</p>
+    </article>
+
+    <article class="bloco-2v bloco-com-imagem reveal">
+      <h2 class="p1"><i>O Discurso Antissistema e a Rendição ao Centrão</i></h2>
+      <h3>Jair Messias Bolsonaro</h3>
+      <img src="BOLSONARO.png" alt="Jair Messias Bolsonaro" loading="lazy" decoding="async">
+      <p>Por outro lado, a tragédia de Bolsonaro é <strong class="frase-chave">o estelionato da nossa indignação.</strong> Ele percebeu que o brasileiro estava exausto, sangrando após anos de corrupção institucionalizada, e sequestrou essa fúria. Vestiu a armadura do falso messias, do <strong class="frase-chave">“outsider” que iria chutar a porta do sistema, varrer a velha política e governar sem concessões.</strong> Mas a sua coragem era de isopor.</p>
+
+      <p>No instante em que o cerco institucional se fechou sobre o seu clã familiar, o suposto herói antissistema acovardou-se. <strong class="frase-chave">Ele entregou o cofre, o orçamento e a espinha dorsal do país nas mãos das raposas mais velhas e vorazes do Centrão.</strong> Em troca de uma blindagem patética para salvar a própria pele, ele loteou a República. <strong class="frase-chave">Ele pegou o nosso desejo pulsante de ruptura e transformou-o num escudo de proteção pessoal, provando que o discurso antissistema, quando vazio de caráter, é o oxigênio perfeito para o próprio sistema.</strong></p>
+    </article>
+  </section>
+  </main>
+</body>
+</html>
