@@ -12,9 +12,13 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Crepúsculo Esmeralda" />
   <meta name="twitter:description" content="Reflexão crítica sobre a origem, a estrutura e os caminhos de transformação do Brasil." />
-  <link rel="stylesheet" href="style.css?v=81" />
+  <link rel="stylesheet" href="style.css?v=82" />
   <link rel="icon" type="image/png" href="OP.png" />
-  <script src="script.js?v=37" defer></script>
+  <script src="script.js?v=38" defer></script>
+  <!-- TESTE-LOGO:INICIO (experimento — para remover, apague este bloco e os arquivos teste-logo.css / teste-logo.js) -->
+  <link rel="stylesheet" href="teste-logo.css?v=1" />
+  <script src="teste-logo.js?v=1" defer></script>
+  <!-- TESTE-LOGO:FIM -->
   <title>CREPÚSCULO ESMERALDA</title>
 </head>
 <body>
@@ -62,7 +66,7 @@
   </header>
 
   <div class="sidebar-backdrop" hidden></div>
-  <aside class="sidebar" id="sidebar" aria-label="Navegação principal" aria-hidden="true" inert>
+  <aside class="sidebar" id="sidebar" role="dialog" aria-modal="true" aria-label="Navegação principal" aria-hidden="true" inert>
     <div class="sidebar-cabecalho">
       <div class="sidebar-marca">
         <div class="sidebar-marca-texto">
@@ -77,17 +81,17 @@
         <span class="sidebar-modo-numero">01</span>
         <span><strong>Manifesto</strong><small>A página inicial</small></span>
       </a>
-      <a class="sidebar-modo" href="#editorial" data-sidebar-mode="Editorial">
+      <a class="sidebar-modo" href="#editorial" data-sidebar-mode="Editorial" data-em-breve>
         <span class="sidebar-modo-numero">02</span>
-        <span><strong>Editorial</strong><small>Ideias em movimento</small></span>
+        <span><strong>Editorial</strong><small>Ideias em movimento</small><em class="sidebar-modo-selo">Em breve</em></span>
       </a>
-      <a class="sidebar-modo" href="#colunas" data-sidebar-mode="Colunas">
+      <a class="sidebar-modo" href="#colunas" data-sidebar-mode="Colunas" data-em-breve>
         <span class="sidebar-modo-numero">03</span>
-        <span><strong>Colunas</strong><small>Vozes e perspectivas</small></span>
+        <span><strong>Colunas</strong><small>Vozes e perspectivas</small><em class="sidebar-modo-selo">Em breve</em></span>
       </a>
-      <a class="sidebar-modo" href="#noticias-politica" data-sidebar-mode="Notícias de política">
+      <a class="sidebar-modo" href="#noticias-politica" data-sidebar-mode="Notícias de política" data-em-breve>
         <span class="sidebar-modo-numero">04</span>
-        <span><strong>Notícias de política</strong><small>O país em debate</small></span>
+        <span><strong>Notícias de política</strong><small>O país em debate</small><em class="sidebar-modo-selo">Em breve</em></span>
       </a>
     </nav>
 

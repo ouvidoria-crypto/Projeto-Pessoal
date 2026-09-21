@@ -861,6 +861,25 @@ body:not(.pagina-inicial-liberada) .menu-toggle {
   font: 400 12px/1.2 "Oswald", sans-serif;
 }
 
+/* Itens ainda indisponíveis: selo "Em breve" e leve atenuação, sem esconder o item. */
+.sidebar-modo-selo {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 2px 8px;
+  border: 1px solid rgba(217, 196, 106, 0.45);
+  border-radius: 999px;
+  color: #d9c46a;
+  font: 700 11px/1.4 "Oswald", sans-serif;
+  font-style: normal;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.sidebar-modo[data-em-breve] strong,
+.sidebar-modo[data-em-breve] small {
+  opacity: 0.75;
+}
+
 .sidebar-conta {
   position: relative;
   margin-top: auto;
@@ -1006,6 +1025,11 @@ body:not(.pagina-inicial-liberada) .menu-toggle {
   color: #0f1f2f;
   cursor: pointer;
   font: 700 13px/1 "Oswald", sans-serif;
+}
+
+/* Reserva o espaço da barra de rolagem: a página não "pula" quando o scroll é bloqueado. */
+html {
+  scrollbar-gutter: stable;
 }
 
 html.sidebar-aberta,

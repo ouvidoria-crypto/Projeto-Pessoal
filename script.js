@@ -95,6 +95,8 @@
     sidebarBackdrop: document.querySelector('.sidebar-backdrop'),
     sidebarClose: document.querySelector('.sidebar-fechar'),
     sidebarModes: document.querySelectorAll('.sidebar-modo'),
+    // Regiões da página que ficam inertes (sem foco/clique) enquanto a sidebar modal está aberta.
+    pageRegions: document.querySelectorAll('.topo, main'),
     sidebarAccount: document.querySelector('.sidebar-conta'),
     accountStatus: document.querySelector('.sidebar-status'),
     accountForm: document.querySelector('.conta-form'),
@@ -354,11 +356,14 @@
       DOM.menuToggle.setAttribute('aria-expanded', String(open));
       DOM.sidebar.setAttribute('aria-hidden', String(!open));
 
+      // Focus trap: com a sidebar aberta, o resto da página fica inert e o Tab não escapa dela.
       if (open) {
         DOM.sidebar.removeAttribute('inert');
+        DOM.pageRegions.forEach((region) => region.setAttribute('inert', ''));
         DOM.sidebarClose?.focus();
       } else {
         DOM.sidebar.setAttribute('inert', '');
+        DOM.pageRegions.forEach((region) => region.removeAttribute('inert'));
         DOM.menuToggle.focus();
       }
 
@@ -372,18 +377,20 @@
     initModes() {
       DOM.sidebarModes.forEach((modeBtn) => {
         modeBtn.addEventListener('click', (e) => {
-          const targetHref = modeBtn.getAttribute('href');
-          const isManifesto = targetHref === '#manifesto-titulo';
+          const isComingSoon = modeBtn.hasAttribute('data-em-breve');
 
-          DOM.sidebarModes.forEach((btn) => btn.classList.remove('is-active'));
-          modeBtn.classList.add('is-active');
-
-          if (!isManifesto) {
+          if (isComingSoon) {
+            // Seção ainda indisponível: não marca como ativa e mantém a sidebar aberta,
+            // para o aviso (anunciado por aria-live) não desaparecer junto com o menu.
             e.preventDefault();
             if (DOM.accountStatus) {
               DOM.accountStatus.textContent = `${modeBtn.dataset.sidebarMode} estará disponível em breve.`;
             }
+            return;
           }
+
+          DOM.sidebarModes.forEach((btn) => btn.classList.remove('is-active'));
+          modeBtn.classList.add('is-active');
           this.toggle(false);
         });
       });

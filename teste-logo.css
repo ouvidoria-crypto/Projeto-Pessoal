@@ -1,0 +1,62 @@
+/* ==========================================================================
+   TESTE-LOGO (experimento) — vídeo TESTE.mp4 ao passar o mouse na logo + zoom.
+   COMO REMOVER: apague o bloco "TESTE-LOGO" do index.html (2 linhas) e os
+   arquivos teste-logo.css e teste-logo.js. Nada em style.css/script.js foi mexido.
+   ========================================================================== */
+
+:root {
+  /* Zoom in ao passar o mouse (1 = sem zoom). Mantém a logo dentro da altura do cabeçalho. */
+  --teste-logo-zoom: 1.12;
+  --teste-logo-tempo: 0.3s;
+  --teste-logo-curva: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 1) Remove o brilho contínuo e os efeitos de hover antigos da logo do cabeçalho. */
+.logo {
+  animation: none !important;
+  will-change: auto !important;
+  filter: none !important;
+  transition: transform var(--teste-logo-tempo) var(--teste-logo-curva) !important;
+}
+
+.topo .logo-wrap:hover .logo,
+.topo:hover .logo {
+  transform: none !important;
+  filter: none !important;
+}
+
+/* 2) Zoom da imagem estática (o vídeo recebe exatamente o mesmo zoom, em sincronia). */
+html .topo .logo-wrap.teste-logo-zoom .logo {
+  transform: scale(var(--teste-logo-zoom)) !important;
+}
+
+/* 3) Enquanto o vídeo toca, a imagem estática fica escondida (sem sobreposição). */
+.logo-wrap.teste-logo-video-on .logo {
+  opacity: 0;
+}
+
+/* 4) Vídeo posicionado por JS exatamente sobre a imagem da logo, dentro do próprio .logo-wrap.
+      O filtro SVG #teste-logo-key transforma o fundo preto do vídeo em transparência REAL
+      (a esfera continua 100% opaca, sem efeito fantasma). O recorte oval acompanha a logo. */
+.teste-logo-video {
+  position: absolute;
+  z-index: 1;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  pointer-events: none;
+  object-fit: fill;
+  opacity: 0;
+  filter: url(#teste-logo-key);
+  clip-path: ellipse(49% 50% at 50% 50%);
+  transform: scale(1);
+  /* Saída: some suavemente enquanto encolhe junto com a imagem estática. */
+  transition: opacity 0.25s ease, transform var(--teste-logo-tempo) var(--teste-logo-curva);
+}
+
+/* Entrada: troca imediata (o quadro inicial do vídeo é praticamente igual à logo estática) e zoom em sincronia. */
+.teste-logo-video.is-on {
+  opacity: 1;
+  transform: scale(var(--teste-logo-zoom));
+  transition: opacity 0s, transform var(--teste-logo-tempo) var(--teste-logo-curva);
+}
