@@ -5,8 +5,14 @@
    ========================================================================== */
 
 :root {
-  /* Zoom in ao passar o mouse (1 = sem zoom). Mantém a logo dentro da altura do cabeçalho. */
-  --teste-logo-zoom: 1.12;
+  /* Zoom in da logo animada (1 = sem zoom). O JS abre espaço deslocando o título para o lado. */
+  --teste-logo-zoom: 1.4;
+  /* Ponto fixo do zoom: o centro da logo. Ela cresce igualmente para cima e para baixo, ficando
+     centralizada no cabeçalho (mesmo eixo do bloco do título) e sem passar da caixa do cabeçalho. */
+  --teste-logo-origem: 50% 50%;
+  /* Leve diminuída da animação ao rolar: a logo animada encolhe até 10% junto com a barra fixa
+     (que encolhe ao descer e volta ao subir). 0 = desliga. */
+  --teste-logo-encolhe: 0.1;
   --teste-logo-tempo: 0.3s;
   --teste-logo-curva: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -16,6 +22,7 @@
   animation: none !important;
   will-change: auto !important;
   filter: none !important;
+  transform-origin: var(--teste-logo-origem) !important;
   transition: transform var(--teste-logo-tempo) var(--teste-logo-curva) !important;
 }
 
@@ -28,6 +35,19 @@
 /* 2) Zoom da imagem estática (o vídeo recebe exatamente o mesmo zoom, em sincronia). */
 html .topo .logo-wrap.teste-logo-zoom .logo {
   transform: scale(var(--teste-logo-zoom)) !important;
+}
+
+/* 2b) Acompanha a barra fixa: enquanto a animação está ativa, o conjunto (imagem + vídeo) encolhe
+       levemente conforme --topo-progresso (0 no topo, 1 rolado; definido pelo script.js no .topo).
+       Segue a rolagem sem atraso (mesma linha de tempo do cabeçalho); ao terminar a animação,
+       volta ao tamanho normal junto com o zoom. */
+.logo-wrap {
+  transition: transform var(--teste-logo-tempo) var(--teste-logo-curva);
+}
+
+.logo-wrap.teste-logo-zoom {
+  transform: scale(calc(1 - var(--teste-logo-encolhe) * var(--topo-progresso, 0)));
+  transition: transform 0.08s linear;
 }
 
 /* 3) Enquanto o vídeo toca, a imagem estática fica escondida (sem sobreposição). */
@@ -49,6 +69,7 @@ html .topo .logo-wrap.teste-logo-zoom .logo {
   opacity: 0;
   filter: url(#teste-logo-key);
   clip-path: ellipse(49% 50% at 50% 50%);
+  transform-origin: var(--teste-logo-origem);
   transform: scale(1);
   /* Saída: some suavemente enquanto encolhe junto com a imagem estática. */
   transition: opacity 0.25s ease, transform var(--teste-logo-tempo) var(--teste-logo-curva);
@@ -63,4 +84,17 @@ html .topo .logo-wrap.teste-logo-zoom .logo {
 /* Zoom em sincronia com a imagem estática (controlado pela classe do .logo-wrap). */
 .logo-wrap.teste-logo-zoom .teste-logo-video {
   transform: scale(var(--teste-logo-zoom));
+}
+
+/* 5) Trigger do título: ao passar o mouse na logo, "CREPÚSCULO ESMERALDA" e "Movidos pelo potencial..."
+      deslocam juntos para o lado (só no layout desktop). O valor real (--teste-logo-desloca-px)
+      é calculado pelo JS para nunca passar da borda da tela. */
+@media (min-width: 769px) {
+  .topo .titulo-principal {
+    transition: transform var(--teste-logo-tempo) var(--teste-logo-curva);
+  }
+
+  .topo.teste-logo-desloca .titulo-principal {
+    transform: translateX(var(--teste-logo-desloca-px, 28px));
+  }
 }
