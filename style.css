@@ -8,7 +8,10 @@
 }
 
 html {
+  /* Reserva a barra de rolagem para evitar deslocamento lateral na liberação. */
+  margin: 0;
   scroll-behavior: auto;
+  scrollbar-gutter: stable;
 }
 
 img {
@@ -16,6 +19,7 @@ img {
 }
 
 body {
+  /* O fundo da Home permanece montado por trás do overlay durante a introdução. */
   position: relative;
   overflow-x: hidden;
   background-color: #dfe8d8;
@@ -29,6 +33,7 @@ body {
 }
 
 body::before {
+  /* Imagem pré-renderizada atrás do overlay, evitando flash preto na transição. */
   content: "";
   position: fixed;
   inset: 0;
@@ -45,12 +50,16 @@ body > * {
   z-index: 1;
 }
 
-body.prefacio-em-foco {
-  background: #0f1f2f;
+body.prefacio-em-foco,
+body.prefacio-fase-2,
+body.intro-phase-2 {
+  background-color: #dfe8d8;
+  background-image: linear-gradient(180deg, rgba(14, 30, 40, 0.12), rgba(14, 30, 40, 0.22));
 }
 
-body.prefacio-fase-2 {
-  background: #0b0b0d;
+body.intro-phase-2::before {
+  /* FASE 2: mantém a imagem da Home presente enquanto o overlay escuro é exibido. */
+  opacity: 1;
 }
 
 .reading-progress {
@@ -100,6 +109,7 @@ body.home-carregando .reading-progress {
   opacity: 0;
 }
 
+/* ATENÇÃO: regra legada; o HTML atual usa .intro-overlay e o JS não cria .intro-splash. */
 .intro-splash {
   position: fixed;
   inset: 0;
@@ -123,13 +133,13 @@ html.entrada-direta main:nth-of-type(1) > section:nth-of-type(1),
 main:nth-of-type(1) > section:nth-of-type(1) {
   position: static !important;
   inset: auto !important;
-  width: 94%;
-  max-width: 1140px;
+  width: var(--preface-width);
+  max-width: 1200px;
   min-height: 0 !important;
   height: auto !important;
   display: block !important;
-  margin: 30px auto;
-  padding: 25px 30px 38px;
+  margin: var(--preface-margin);
+  padding: var(--preface-padding);
   border-radius: 12px;
   background: #000000 !important;
   border: 2px solid #ffffff !important;
@@ -465,6 +475,115 @@ body::after {
   }
 }
 
+/* // AJUSTE 1: sincroniza a cor do título com a abertura da accordion. */
+:root {
+  --preface-motion-duration: 0.8s;
+  --preface-motion-easing: ease;
+}
+
+.intro-overlay[data-intro-state="preface"] .intro-overlay__title,
+.intro-overlay[data-intro-state="preface"] .intro-overlay__title span,
+.intro-overlay[data-intro-state="preface"] .intro-overlay__title .titulo-icone,
+.intro-overlay[data-intro-state="preface"] .intro-overlay__title .frase-chave {
+  color: #91a63a;
+}
+
+.intro-overlay__title,
+.intro-overlay__title span,
+.intro-overlay__title .titulo-icone,
+.intro-overlay__title .frase-chave {
+  transition: color var(--preface-motion-duration) var(--preface-motion-easing);
+}
+
+.intro-overlay[data-intro-state="accordion"] .intro-overlay__title,
+.intro-overlay[data-intro-state="accordion"] .intro-overlay__title span,
+.intro-overlay[data-intro-state="accordion"] .intro-overlay__title .titulo-icone,
+.intro-overlay[data-intro-state="accordion"] .intro-overlay__title .frase-chave,
+.intro-overlay[data-intro-state="resolving"] .intro-overlay__title,
+.intro-overlay[data-intro-state="resolving"] .intro-overlay__title span,
+.intro-overlay[data-intro-state="resolving"] .intro-overlay__title .titulo-icone,
+.intro-overlay[data-intro-state="resolving"] .intro-overlay__title .frase-chave {
+  color: #ffffff;
+}
+
+/* // AJUSTE 3: a Fase 1 sobe até a Home; a Fase 2 abre a accordion no mesmo ritmo. */
+.intro-overlay[data-intro-state="preface"] .intro-overlay__text-box {
+  transform: translateY(var(--preface-phase2-shift, 0px)) !important;
+  transition: opacity var(--preface-motion-duration) var(--preface-motion-easing),
+    transform var(--preface-motion-duration) var(--preface-motion-easing);
+}
+
+.intro-overlay[data-intro-state="accordion"] .intro-overlay__text-box,
+.intro-overlay[data-intro-state="resolving"] .intro-overlay__text-box {
+  transform: none !important;
+  transition: opacity var(--preface-motion-duration) var(--preface-motion-easing),
+    transform var(--preface-motion-duration) var(--preface-motion-easing);
+}
+
+.intro-overlay__accordion {
+  transition: grid-template-rows var(--preface-motion-duration) var(--preface-motion-easing),
+    opacity var(--preface-motion-duration) var(--preface-motion-easing),
+    transform var(--preface-motion-duration) var(--preface-motion-easing),
+    margin-top var(--preface-motion-duration) var(--preface-motion-easing);
+}
+
+/* // AJUSTE 2: congela o prefácio da Home e neutraliza hover/foco/ativo sem alterar seu tamanho. */
+.manifesto-box.prefacio-home-final,
+.manifesto-box.prefacio-home-final:hover,
+.manifesto-box.prefacio-home-final:focus,
+.manifesto-box.prefacio-home-final:active,
+.manifesto-box.prefacio-home-final.is-touch-active {
+  width: var(--preface-width) !important;
+  max-width: 1200px !important;
+  min-width: var(--preface-min-width) !important;
+  margin: var(--preface-margin) !important;
+  padding: var(--preface-padding) !important;
+  border-width: 2px !important;
+  transform: none !important;
+  animation: none !important;
+  transition: none !important;
+  cursor: default !important;
+}
+
+.manifesto-box.prefacio-home-final .prefacio-cascata,
+.manifesto-box.prefacio-home-final .prefacio-cascata:hover,
+.manifesto-box.prefacio-home-final .prefacio-cascata:focus,
+.manifesto-box.prefacio-home-final .prefacio-cascata:active,
+.manifesto-box.prefacio-home-final .prefacio-cascata strong,
+.manifesto-box.prefacio-home-final .prefacio-cascata strong:hover,
+.manifesto-box.prefacio-home-final .prefacio-cascata strong:focus,
+.manifesto-box.prefacio-home-final .prefacio-cascata strong:active {
+  color: #ffffff !important;
+  transform: none !important;
+  animation: none !important;
+  text-shadow: none !important;
+  cursor: default !important;
+}
+
+.manifesto-box.prefacio-home-final .prefacio-cascata strong::before,
+.manifesto-box.prefacio-home-final .prefacio-cascata strong::after {
+  content: none !important;
+  display: none !important;
+  animation: none !important;
+  box-shadow: none !important;
+}
+
+/* // AJUSTE 2: vence os seletores legados de entrada direta também em mobile. */
+html body main .manifesto-box.prefacio-home-final,
+html body main .manifesto-box.prefacio-home-final:hover,
+html body main .manifesto-box.prefacio-home-final:focus,
+html body main .manifesto-box.prefacio-home-final:active {
+  width: var(--preface-width) !important;
+  max-width: 1200px !important;
+  min-width: var(--preface-min-width) !important;
+  padding: var(--preface-padding) !important;
+  margin: var(--preface-margin) !important;
+}
+
+html body .manifesto-box.prefacio-home-final {
+  background: #0b0b0c !important;
+}
+
 .topo {
   position: sticky;
   top: 0;
@@ -479,9 +598,9 @@ body::after {
   border-radius: 0;
   width: 100vw;
   max-width: 100vw;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
-  padding: 8px 0;
+  font-family: "Merriweather", serif;
+  font-size: var(--preface-title-size);
+  font-weight: 700;
   box-sizing: border-box;
   line-height: 1.2;
   --topo-progresso: 0;
@@ -1064,9 +1183,12 @@ h1 {
 }
 
 .manifesto-box {
-  max-width: 1140px;
-  margin: 30px auto;
-  padding: 25px 30px;
+  /* Home: mesmas variáveis estruturais consumidas pelo container da intro. */
+  width: var(--preface-width);
+  min-width: var(--preface-min-width);
+  max-width: 1200px;
+  margin: var(--preface-margin);
+  padding: var(--preface-padding);
   background: linear-gradient(180deg, #1f2e49, #082f49);
   border: 2px solid #1a19198c;
   border-radius: 12px;
@@ -1221,9 +1343,10 @@ body.prefacio-em-foco .manifesto-box.prefacio-abertura-encerrada {
   margin: 0;
   color: #d5e7eb;
   font-family: "Merriweather", serif;
-  font-size: 20px;
-  text-align: justify;
-  line-height: 1.8;
+  font-size: var(--preface-font-size);
+  text-align: var(--preface-text-align);
+  line-height: var(--preface-line-height);
+  letter-spacing: var(--preface-letter-spacing);
 }
 
 .manifesto-texto b,
@@ -1305,7 +1428,7 @@ body.prefacio-em-foco .manifesto-box.prefacio-abertura-encerrada {
   width: 100%;
   margin: 0 0 12px;
   font-family: "Merriweather", serif;
-  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-size: var(--preface-title-size);
   font-weight: 700;
   line-height: 1.1;
   text-align: left;
@@ -2655,4 +2778,417 @@ body.prefacio-em-foco .manifesto-box.prefacio-ativo .prefacio-cascata {
     letter-spacing: 0.01em;
     white-space: normal;
   }
+}
+
+/* Intro overlay: keeps the home layout mounted and stable behind the animation. */
+:root {
+  /* Variáveis compartilhadas: intro e Home usam a mesma geometria do prefácio. */
+  --preface-width: min(1200px, calc(100vw - 48px));
+  --preface-min-width: 0;
+  --preface-margin: 30px auto;
+  --preface-padding: 25px 30px;
+  --preface-font-size: 20px;
+  --preface-title-size: clamp(2rem, 4vw, 3.5rem);
+  --preface-line-height: 1.8;
+  --preface-letter-spacing: 0;
+  --preface-text-align: justify;
+  --preface-accordion-margin: 42px;
+  --preface-overlay-top: 30px;
+  --preface-overlay-left: 0px;
+  --preface-final-height: auto;
+  --intro-bg: #0f1f2f;
+}
+
+body.intro-is-active,
+html.intro-is-active {
+  /* ESTADO INICIAL e FASES 1/2: bloqueia o scroll enquanto o overlay está ativo. */
+  overflow: hidden;
+}
+
+.intro-overlay {
+  /* ESTADO INICIAL: overlay fixo em tela cheia sobre a Home já renderizada. */
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--intro-bg);
+  color: #dfe8d8;
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.7s ease, background-color 1.2s ease, color 1.2s ease;
+}
+
+body,
+body::before {
+  transition: background-color 1.2s ease, opacity 1.2s ease, filter 1.2s ease;
+}
+
+body.intro-phase-2,
+html.intro-phase-2 {
+  background-color: transparent;
+}
+
+.intro-overlay[data-intro-state="accordion"],
+.intro-overlay[data-intro-state="resolving"] {
+  /* FASE 2: fundo institucional e tipografia branca confinados ao overlay. */
+  background: #0b0b0c;
+  color: #ffffff;
+}
+
+.intro-overlay[data-intro-state="accordion"] .intro-overlay__title,
+.intro-overlay[data-intro-state="accordion"] .intro-overlay__title span,
+.intro-overlay[data-intro-state="accordion"] .intro-overlay__copy,
+.intro-overlay[data-intro-state="accordion"] .intro-overlay__copy b,
+.intro-overlay[data-intro-state="accordion"] .intro-overlay__copy i,
+.intro-overlay[data-intro-state="accordion"] .intro-overlay__revolt,
+.intro-overlay[data-intro-state="accordion"] .intro-overlay__revolt strong,
+.intro-overlay[data-intro-state="resolving"] .intro-overlay__title,
+.intro-overlay[data-intro-state="resolving"] .intro-overlay__title span,
+.intro-overlay[data-intro-state="resolving"] .intro-overlay__copy,
+.intro-overlay[data-intro-state="resolving"] .intro-overlay__copy b,
+.intro-overlay[data-intro-state="resolving"] .intro-overlay__copy i,
+.intro-overlay[data-intro-state="resolving"] .intro-overlay__revolt,
+.intro-overlay[data-intro-state="resolving"] .intro-overlay__revolt strong {
+  color: #ffffff;
+}
+
+.intro-overlay[data-intro-state="resolving"] {
+  /* TRANSIÇÃO: desaparece apenas por opacity, sem alterar o layout inferior. */
+  opacity: 0;
+  pointer-events: none;
+}
+
+.intro-overlay__stage {
+  /* Stage da intro: sua largura deriva da mesma variável usada pela Home. */
+  position: relative;
+  width: var(--preface-width);
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+}
+
+.intro-overlay__logo {
+  /* ESTADO INICIAL: logo centralizada; as fases seguintes alteram sua opacity. */
+  position: absolute;
+  width: min(58vw, 460px);
+  opacity: 0;
+  transform: scale(0.76);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.intro-overlay[data-intro-state="splash"] .intro-overlay__logo {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.intro-overlay__text-box {
+  /* FASES 1/2: caixa posicionada sobre as coordenadas do manifesto da Home. */
+  position: fixed;
+  top: var(--preface-overlay-top);
+  left: var(--preface-overlay-left);
+  width: var(--preface-width);
+  min-width: var(--preface-min-width);
+  max-width: 1200px;
+  min-height: var(--preface-final-height);
+  margin: 0;
+  padding: var(--preface-padding);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  text-align: var(--preface-text-align);
+  box-sizing: border-box;
+  opacity: 0;
+  transform: none;
+  transition: opacity 0.7s ease;
+}
+
+.prefacio-home-final {
+  width: var(--preface-width) !important;
+  max-width: 1200px !important;
+  margin: var(--preface-margin) !important;
+  background: #0b0b0c !important;
+  border-color: #ffffff !important;
+  color: #ffffff !important;
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+.manifesto-box.prefacio-em-saida {
+  /* TRANSIÇÃO: impede animações de tamanho, padding ou cor durante a saída. */
+  transition: none !important;
+  animation: none !important;
+}
+
+.prefacio-home-final:hover,
+.prefacio-home-final.is-touch-active {
+  background: #0b0b0c !important;
+  border-color: #ffffff !important;
+  box-shadow: none !important;
+  color: #ffffff !important;
+  transform: none !important;
+}
+
+.prefacio-home-final .p1,
+.prefacio-home-final .p1 .titulo-icone,
+.prefacio-home-final .p1 .frase-chave,
+.prefacio-home-final .p1 .frase-chave::after,
+.prefacio-home-final .manifesto-texto,
+.prefacio-home-final .manifesto-texto b,
+.prefacio-home-final .manifesto-texto i,
+.prefacio-home-final .prefacio-cascata,
+.prefacio-home-final .prefacio-cascata span,
+.prefacio-home-final .prefacio-cascata strong {
+  color: #ffffff !important;
+  animation: none !important;
+  transition: none !important;
+}
+
+.prefacio-home-final .p1 .frase-chave::after {
+  background: #ffffff !important;
+}
+
+.prefacio-home-final .prefacio-cascata {
+  /* Home: conteúdo já expandido por trás do overlay, com a altura final reservada. */
+  display: grid !important;
+  max-height: none !important;
+  margin-top: var(--preface-accordion-margin) !important;
+  opacity: 1 !important;
+  transform: none !important;
+  visibility: visible !important;
+}
+
+.prefacio-home-final .prefacio-cascata strong::after {
+  display: none !important;
+}
+
+.intro-overlay[data-intro-state="preface"] .intro-overlay__logo,
+.intro-overlay[data-intro-state="accordion"] .intro-overlay__logo,
+.intro-overlay[data-intro-state="resolving"] .intro-overlay__logo {
+  /* FASE 1: a logo sai quando o texto inicial passa a ser visível. */
+  opacity: 0;
+  transform: scale(1.05);
+}
+
+.intro-overlay[data-intro-state="preface"] .intro-overlay__text-box,
+.intro-overlay[data-intro-state="accordion"] .intro-overlay__text-box,
+.intro-overlay[data-intro-state="resolving"] .intro-overlay__text-box {
+  /* FASE 1: texto inicial entra no mesmo box alinhado à Home. */
+  opacity: 1;
+  transform: none !important;
+}
+
+.intro-overlay__title {
+  width: 100%;
+  margin: 0 0 12px;
+  color: #d9c46a;
+  font: 700 var(--preface-title-size)/1.1 "Merriweather", serif;
+  letter-spacing: var(--preface-letter-spacing);
+}
+
+.intro-overlay__title > i {
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+  min-width: 0;
+}
+
+.intro-overlay__title .frase-chave {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+}
+
+.intro-overlay__title .frase-chave::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 4px;
+  margin-top: 12px;
+  background-color: #d9c46a;
+  border-radius: 10px;
+  transform-origin: left center;
+}
+
+.intro-overlay[data-intro-state="accordion"] .intro-overlay__title .frase-chave::after,
+.intro-overlay[data-intro-state="resolving"] .intro-overlay__title .frase-chave::after {
+  background-color: #ffffff;
+}
+
+.intro-overlay__title span {
+  color: #91a63a;
+}
+
+.intro-overlay__copy {
+  margin: 0;
+  color: #7ea8bd;
+  font: var(--preface-font-size)/var(--preface-line-height) "Merriweather", serif;
+  letter-spacing: var(--preface-letter-spacing);
+  text-align: var(--preface-text-align);
+}
+
+.intro-overlay__accordion {
+  /* FASE 2: accordion recolhida; a altura é controlada pela grade. */
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.8s ease, opacity 0.6s ease;
+}
+
+.intro-overlay[data-intro-state="accordion"] .intro-overlay__accordion,
+.intro-overlay[data-intro-state="resolving"] .intro-overlay__accordion {
+  /* FASE 2: complemento expandido antes da transição final. */
+  grid-template-rows: 1fr;
+  margin-top: var(--preface-accordion-margin);
+  max-height: none;
+  opacity: 1;
+  transform: none;
+}
+
+.intro-overlay__accordion-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.intro-overlay .prefacio-cascata span,
+.intro-overlay .prefacio-cascata strong,
+.intro-overlay .prefacio-cascata strong:hover,
+.intro-overlay .prefacio-cascata strong:active,
+.manifesto-box .prefacio-cascata strong,
+.manifesto-box .prefacio-cascata strong:hover,
+.manifesto-box .prefacio-cascata strong:active {
+  color: #ffffff !important;
+  text-shadow: none !important;
+  animation: none !important;
+}
+
+.intro-overlay .prefacio-cascata strong::after,
+.manifesto-box .prefacio-cascata strong::after {
+  display: none !important;
+  animation: none !important;
+  box-shadow: none !important;
+}
+
+@media (max-width: 768px) {
+  /* Responsivo: altera apenas variáveis compartilhadas para manter os boxes iguais. */
+  :root {
+    --preface-width: calc(100vw - 32px);
+    --preface-margin: 20px auto;
+    --preface-padding: 18px 16px;
+  }
+
+  .intro-overlay__stage {
+    width: 94vw;
+  }
+
+  .intro-overlay__copy {
+    font-size: 16px;
+    line-height: 1.8;
+  }
+}
+
+@media (max-width: 768px) {
+  .manifesto-box,
+  .intro-overlay__text-box {
+    width: var(--preface-width) !important;
+    max-width: var(--preface-width) !important;
+    min-width: var(--preface-min-width) !important;
+    padding: var(--preface-padding) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-overlay,
+  .intro-overlay__logo,
+  .intro-overlay__text-box,
+  .intro-overlay__accordion {
+    transition-duration: 0.01ms;
+  }
+}
+
+/* // AJUSTE 1: precedência final da transição verde -> branco do título. */
+.intro-overlay[data-intro-state="preface"] .intro-overlay__title,
+.intro-overlay[data-intro-state="preface"] .intro-overlay__title span,
+.intro-overlay[data-intro-state="preface"] .intro-overlay__title .titulo-icone,
+.intro-overlay[data-intro-state="preface"] .intro-overlay__title .frase-chave {
+  color: #91a63a;
+  transition: color var(--preface-motion-duration) var(--preface-motion-easing);
+}
+
+.intro-overlay[data-intro-state="accordion"] .intro-overlay__title,
+.intro-overlay[data-intro-state="accordion"] .intro-overlay__title span,
+.intro-overlay[data-intro-state="accordion"] .intro-overlay__title .titulo-icone,
+.intro-overlay[data-intro-state="accordion"] .intro-overlay__title .frase-chave,
+.intro-overlay[data-intro-state="resolving"] .intro-overlay__title,
+.intro-overlay[data-intro-state="resolving"] .intro-overlay__title span,
+.intro-overlay[data-intro-state="resolving"] .intro-overlay__title .titulo-icone,
+.intro-overlay[data-intro-state="resolving"] .intro-overlay__title .frase-chave {
+  /* // AJUSTE 1: impede qualquer regra legada de sobrescrever o branco da Fase 2. */
+  color: #ffffff !important;
+  transition: color var(--preface-motion-duration) var(--preface-motion-easing);
+}
+
+/* // AJUSTE 2: precedência final; hover, foco, ativo e toque não alteram o prefácio. */
+.manifesto-box.prefacio-home-final,
+.manifesto-box.prefacio-home-final:hover,
+.manifesto-box.prefacio-home-final:focus,
+.manifesto-box.prefacio-home-final:active,
+.manifesto-box.prefacio-home-final.is-touch-active {
+  width: var(--preface-width) !important;
+  max-width: 1200px !important;
+  min-width: var(--preface-min-width) !important;
+  margin: var(--preface-margin) !important;
+  padding: var(--preface-padding) !important;
+  border-width: 2px !important;
+  transform: none !important;
+  animation: none !important;
+  transition: none !important;
+  cursor: default !important;
+}
+
+.manifesto-box.prefacio-home-final .prefacio-cascata,
+.manifesto-box.prefacio-home-final .prefacio-cascata:hover,
+.manifesto-box.prefacio-home-final .prefacio-cascata:focus,
+.manifesto-box.prefacio-home-final .prefacio-cascata:active,
+.manifesto-box.prefacio-home-final .prefacio-cascata strong,
+.manifesto-box.prefacio-home-final .prefacio-cascata strong:hover,
+.manifesto-box.prefacio-home-final .prefacio-cascata strong:focus,
+.manifesto-box.prefacio-home-final .prefacio-cascata strong:active {
+  color: #ffffff !important;
+  transform: none !important;
+  animation: none !important;
+  text-shadow: none !important;
+  cursor: default !important;
+}
+
+.manifesto-box.prefacio-home-final .prefacio-cascata strong::before,
+.manifesto-box.prefacio-home-final .prefacio-cascata strong::after {
+  content: none !important;
+  display: none !important;
+  animation: none !important;
+  box-shadow: none !important;
+}
+
+/* // AJUSTE 3: movimento calculado da Fase 1 e abertura sincronizada da Fase 2. */
+.intro-overlay[data-intro-state="preface"] .intro-overlay__text-box {
+  transform: translateY(var(--preface-phase2-shift, 0px)) !important;
+  transition: opacity var(--preface-motion-duration) var(--preface-motion-easing),
+    transform var(--preface-motion-duration) var(--preface-motion-easing);
+}
+
+.intro-overlay[data-intro-state="accordion"] .intro-overlay__text-box,
+.intro-overlay[data-intro-state="resolving"] .intro-overlay__text-box {
+  transform: none !important;
+  transition: opacity var(--preface-motion-duration) var(--preface-motion-easing),
+    transform var(--preface-motion-duration) var(--preface-motion-easing);
+}
+
+.intro-overlay[data-intro-state="accordion"] .intro-overlay__accordion,
+.intro-overlay[data-intro-state="resolving"] .intro-overlay__accordion {
+  transition: grid-template-rows var(--preface-motion-duration) var(--preface-motion-easing),
+    opacity var(--preface-motion-duration) var(--preface-motion-easing),
+    transform var(--preface-motion-duration) var(--preface-motion-easing),
+    margin-top var(--preface-motion-duration) var(--preface-motion-easing);
 }

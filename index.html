@@ -20,8 +20,28 @@
 <body>
   <div class="reading-progress" aria-hidden="true"></div>
   <div class="prefacio-progress" aria-hidden="true"></div>
-  <div class="intro-splash" aria-hidden="true">
-    <img src="OP.png" alt="">
+  <!-- ===== ESTADO INICIAL: Splash / Logo =====
+       Overlay fixo que cobre a Home durante a introdução e começa no estado splash. -->
+  <div class="intro-overlay" data-intro-state="splash" aria-label="Introdução ao Crepúsculo Esmeralda">
+    <!-- Estrutura de posicionamento usada para manter o conteúdo da intro sobre a Home. -->
+    <div class="intro-overlay__stage">
+      <!-- ===== ESTADO INICIAL: Splash / Logo ===== Logo centralizada enquanto data-intro-state="splash". -->
+      <img class="intro-overlay__logo" src="OP.png" alt="">
+      <!-- Caixa da intro sincronizada pelo JavaScript com o manifesto já montado na Home. -->
+      <div class="intro-overlay__text-box">
+        <!-- ===== FASE 1: Prefácio (texto inicial) ===== Título espelhado ao título real do manifesto. -->
+        <h2 class="intro-overlay__title p1"><i><span class="titulo-icone prefacio-icone" aria-hidden="true">§</span><strong class="frase-chave">Prefácio</strong></i></h2>
+        <!-- ===== FASE 1: Prefácio (texto inicial) ===== Texto inicial apresentado após a saída da logo. -->
+        <p class="intro-overlay__copy manifesto-texto">Já passou da hora da revolta mútua e geral dos cidadãos brasileiros. Este manifesto é dedicado a acabar com o estado de anestesia em que a população se encontra e causar uma mudança estrutural no <b><i>modus pensandi</i></b> deste país.</p>
+        <!-- ===== FASE 2: Prefácio (accordion) ===== Área que se expande para revelar o complemento. -->
+        <div class="intro-overlay__accordion prefacio-cascata" aria-hidden="true">
+          <!-- Texto complementar que aparece abaixo do texto da Fase 1. -->
+          <span>O estado natural do ser humano não é a passividade.</span>
+          <!-- Ênfase final do texto complementar da Fase 2. -->
+          <strong>É a REVOLTA!</strong>
+        </div>
+      </div>
+    </div>
   </div>
   <audio id="tema-audio" preload="auto" loop src="TEMA.opus?v=2" type="audio/ogg; codecs=opus"></audio>
 
@@ -103,7 +123,7 @@
   </aside>
 
   <main>
-  <section class="manifesto-box reveal" aria-labelledby="manifesto-titulo">
+  <section class="manifesto-box prefacio-home-final reveal" aria-labelledby="manifesto-titulo">
     <h2 id="manifesto-titulo" class="p1"><i><span class="titulo-icone prefacio-icone" aria-hidden="true">§</span><strong class="frase-chave">Prefácio</strong></i></h2>
     <p class="manifesto-texto">Já passou da hora da revolta mútua e geral dos cidadãos brasileiros. Este manifesto é dedicado a acabar com o estado de anestesia em que a população se encontra e causar uma mudança estrutural no <b><i>modus pensandi</i></b> deste país.</p>
     <div class="prefacio-cascata" aria-live="polite">

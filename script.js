@@ -2,6 +2,14 @@
  * @file script.js
  * @description Módulo de Ciclo de Vida e Interações - Crepúsculo Esmeralda
  * Padrão: Módulo Auto-Contido (IIFE) com Máquina de Estados Finita e Desacoplamento de DOM
+ * COMO PORTAR ESTE SITE: mantenha o overlay e seus elementos .intro-overlay,
+ * .intro-overlay__stage, .intro-overlay__logo, .intro-overlay__text-box e
+ * .intro-overlay__accordion; preserve .manifesto-box, as classes de estado,
+ * as variáveis e regras CSS da intro, este script e os assets referenciados.
+ * A nova plataforma também precisa preservar document.body/documentElement,
+ * sessionStorage, requestAnimationFrame e o evento DOMContentLoaded.
+ * Sequência: Splash/Logo -> Fase 1/Prefácio -> Fase 2/Accordion ->
+ * Transição/Fade-out e liberação da Home.
  */
 (() => {
   'use strict';
@@ -13,11 +21,11 @@
     STORAGE_KEY: 'crepusculo-entrada-direta',
     STORAGE_TTL_MS: 4000,
     SCROLL_TRANSITION_THRESHOLD: 120,
-    ANIMATION_DELAYS: Object.freeze({
-      PREFACE_PROGRESS_START_MS: 2800,
-      PREFACE_PHASE_2_MS: 4800,
-      PREFACE_RELEASE_MS: 2000,
-      PREFACE_TRANSITION_END_MS: 850,
+    INTRO_TIMINGS: Object.freeze({
+      SPLASH_MS: 900,
+      PREFACE_MS: 1700,
+      ACCORDION_MS: 1800,
+      RESOLUTION_MS: 700,
       LOGO_REFRESH_DURATION_MS: 600
     }),
     THEME_COLORS: Object.freeze({
@@ -31,19 +39,10 @@
   // 2. MÁQUINA DE ESTADOS DO PREFÁCIO & SESSÃO (Isolada)
   // =========================================================================
   const LifecycleManager = (() => {
-    let state = 'INITIALIZING'; // 'SPLASH' | 'PHASE_1' | 'PHASE_2' | 'RELEASED' | 'DIRECT'
-    let timers = [];
+    let state = 'INITIALIZING';
 
-    const clearActiveTimers = () => {
-      timers.forEach((t) => window.clearTimeout(t));
-      timers = [];
-    };
-
-    const addTimer = (fn, delay) => {
-      const id = window.setTimeout(fn, delay);
-      timers.push(id);
-      return id;
-    };
+    // Temporização assíncrona que dispara a próxima fase sem alterar o DOM por si só.
+    const wait = (duration) => new Promise((resolve) => window.setTimeout(resolve, duration));
 
     const isDirectEntryValid = () => {
       try {
@@ -68,8 +67,7 @@
     return {
       getState: () => state,
       setState: (newState) => { state = newState; },
-      addTimer,
-      clearActiveTimers,
+      wait,
       isDirectEntryValid,
       markDirectEntryForNextReload
     };
@@ -82,7 +80,9 @@
     root: document.documentElement,
     body: document.body,
     metaTheme: document.querySelector('meta[name="theme-color"]'),
-    splash: document.querySelector('.intro-splash'),
+    introOverlay: document.querySelector('.intro-overlay'),
+    introTextBox: document.querySelector('.intro-overlay__text-box'),
+    introAccordion: document.querySelector('.intro-overlay__accordion'),
     topo: document.querySelector('.topo'),
     logoWrap: document.querySelector('.logo-wrap'),
     homeLoadingBar: document.querySelector('.home-loading-bar span'),
@@ -102,97 +102,108 @@
     accountSubmit: document.querySelector('.conta-form-submit'),
     audioTheme: document.getElementById('tema-audio'),
     revealElements: document.querySelectorAll('.reveal'),
-    interactiveElements: document.querySelectorAll('.manifesto-box, .box-int, .bloco, .bloco-1v, .bloco-2v')
+    // AJUSTE 2: o prefácio não participa das interações de toque; seu tamanho e estado são fixos.
+    interactiveElements: document.querySelectorAll('.box-int, .bloco, .bloco-1v, .bloco-2v')
   };
 
   // =========================================================================
   // 4. CONTROLADOR VISUAL & METATAGS
   // =========================================================================
   const ViewController = {
+    // Alinhamento: copia as coordenadas e a altura finais do manifesto real para o overlay.
+    syncIntroToHome() {
+      if (!DOM.prefaceBox || !DOM.introTextBox) return;
+
+      const homeRect = DOM.prefaceBox.getBoundingClientRect();
+
+      DOM.introTextBox.style.setProperty('--preface-overlay-top', `${homeRect.top}px`);
+      DOM.introTextBox.style.setProperty('--preface-overlay-left', `${homeRect.left}px`);
+      DOM.introTextBox.style.setProperty('--preface-width', `${homeRect.width}px`);
+      DOM.introTextBox.style.setProperty('--preface-final-height', `${homeRect.height}px`);
+
+      // AJUSTE 3: calcula o deslocamento da Fase 1 a partir da altura natural da accordion.
+      const accordionHeight = DOM.prefaceBox.querySelector('.prefacio-cascata')?.getBoundingClientRect().height || 0;
+      DOM.introTextBox.style.setProperty('--preface-phase2-shift', `${(accordionHeight / 2).toFixed(3)}px`);
+
+      // AJUSTE 4: alinha a borda visual das barras do hambúrguer à borda do prefácio.
+      if (DOM.menuToggle) {
+        const visualBarInset = window.innerWidth <= 768 ? 7 : 9;
+        DOM.menuToggle.style.left = `${homeRect.left - visualBarInset}px`;
+
+        // AJUSTE 4: mede border/padding reais para alinhar a barra visível, não a caixa do botão.
+        const firstBar = DOM.menuToggle.querySelector('span');
+        if (firstBar) {
+          const menuRect = DOM.menuToggle.getBoundingClientRect();
+          const barRect = firstBar.getBoundingClientRect();
+          DOM.menuToggle.style.left = `${homeRect.left - (barRect.left - menuRect.left) - 1}px`;
+        }
+      }
+    },
+
     setThemeColor(color) {
       if (DOM.metaTheme) DOM.metaTheme.setAttribute('content', color);
     },
 
     executeDirectEntry() {
+      // Entrada direta: pula a animação e libera a Home imediatamente.
       LifecycleManager.setState('DIRECT');
-      LifecycleManager.clearActiveTimers();
+      this.finishIntro();
+    },
 
-      DOM.root.classList.add('entrada-direta', 'pagina-inicial-liberada');
-      DOM.body.classList.add('entrada-direta', 'pagina-inicial-liberada');
-      DOM.body.classList.remove('prefacio-em-foco', 'prefacio-em-saida', 'prefacio-fase-2');
-      DOM.root.classList.remove('prefacio-em-foco', 'prefacio-em-saida');
+    async startIntroSequence() {
+      // ===== ESTADO INICIAL: Splash / Logo =====
+      // Adiciona intro-is-active; o CSS correspondente bloqueia o scroll do documento.
+      if (!DOM.introOverlay) return;
+      const timings = CONFIG.INTRO_TIMINGS;
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const duration = (value) => reducedMotion ? 0 : value;
 
-      DOM.splash?.remove();
+      DOM.body.classList.add('intro-is-active');
+      DOM.root.classList.add('intro-is-active');
+      this.syncIntroToHome();
+      DOM.introOverlay.dataset.introState = 'splash';
+      LifecycleManager.setState('SPLASH');
+      await LifecycleManager.wait(duration(timings.SPLASH_MS));
 
-      if (DOM.prefaceBox) {
-        DOM.prefaceBox.classList.add('prefacio-ativo', 'prefacio-abertura-encerrada');
-        DOM.prefaceBox.setAttribute('data-fase', '2');
-        DOM.prefaceBox.dataset.locked = 'true';
-        DOM.prefaceBox.style.animation = 'none';
-        DOM.prefaceBox.style.opacity = '1';
-        DOM.prefaceBox.style.transform = 'none';
-        DOM.prefaceBox.style.visibility = 'visible';
-        DOM.prefaceBox.style.display = '';
-        DOM.prefaceBox.style.position = '';
-        DOM.prefaceBox.style.inset = '';
-      }
+      // ===== FASE 1: Prefácio (texto inicial) =====
+      // A troca de estado faz a logo desaparecer e revela o texto já alinhado à Home.
+      LifecycleManager.setState('PREFACE');
+      DOM.introOverlay.dataset.introState = 'preface';
+      await LifecycleManager.wait(duration(timings.PREFACE_MS));
 
+      // ===== FASE 2: Prefácio (accordion) =====
+      // O CSS muda a grade de 0fr para 1fr e revela a frase complementar abaixo do texto.
+      LifecycleManager.setState('ACCORDION');
+      DOM.introOverlay.dataset.introState = 'accordion';
+      DOM.body.classList.add('intro-phase-2');
+      DOM.root.classList.add('intro-phase-2');
+      DOM.introAccordion?.setAttribute('aria-hidden', 'false');
+      await LifecycleManager.wait(duration(timings.ACCORDION_MS));
+
+      // ===== TRANSIÇÃO: Fade-out e liberação da Home =====
+      // A classe de saída congela o manifesto; a opacity do overlay é então reduzida pelo CSS.
+      LifecycleManager.setState('RESOLVING');
+      DOM.prefaceBox?.classList.add('prefacio-em-saida');
+      DOM.introOverlay.dataset.introState = 'resolving';
+      await LifecycleManager.wait(duration(timings.RESOLUTION_MS));
+      this.finishIntro();
+    },
+
+    finishIntro() {
+      // Libera o scroll removendo intro-is-active, fixa o estado final da Home e destrói o overlay.
+      LifecycleManager.setState('RELEASED');
+      // AJUSTE 4: também sincroniza a entrada direta acionada pelo recarregamento da logo.
+      this.syncIntroToHome();
+      DOM.body.classList.remove('intro-is-active');
+      DOM.root.classList.remove('intro-is-active', 'intro-phase-2', 'prefacio-home-final');
+      DOM.body.classList.remove('intro-phase-2', 'prefacio-home-final');
+      DOM.body.classList.add('pagina-inicial-liberada');
+      DOM.root.classList.add('pagina-inicial-liberada');
+      DOM.prefaceBox?.classList.add('prefacio-home-final');
       DOM.readingProgress?.classList.add('is-visible');
       this.setThemeColor(CONFIG.THEME_COLORS.NORMAL);
+      DOM.introOverlay?.remove();
       ScrollController.update();
-    },
-
-    startPrefaceSequence() {
-      if (!DOM.prefaceBox) return;
-
-      LifecycleManager.setState('PHASE_1');
-      DOM.body.classList.add('prefacio-em-foco');
-      DOM.root.classList.add('prefacio-em-foco');
-      DOM.prefaceBox.setAttribute('data-fase', '1');
-
-      if (DOM.prefaceProgress) {
-        LifecycleManager.addTimer(() => {
-          window.requestAnimationFrame(() => DOM.prefaceProgress.classList.add('is-running'));
-        }, CONFIG.ANIMATION_DELAYS.PREFACE_PROGRESS_START_MS);
-      }
-
-      LifecycleManager.addTimer(() => {
-        // Transição para Fase 2 (A REVOLTA)
-        LifecycleManager.setState('PHASE_2');
-        DOM.prefaceBox.classList.add('prefacio-ativo');
-        DOM.body.classList.add('prefacio-fase-2');
-        DOM.prefaceBox.setAttribute('data-fase', '2');
-        DOM.prefaceBox.dataset.locked = 'true';
-        this.setThemeColor(CONFIG.THEME_COLORS.PHASE_2);
-        DOM.prefaceProgress?.classList.add('is-complete');
-
-        // Transição para Liberação da Página
-        LifecycleManager.addTimer(() => {
-          this.releasePage();
-        }, CONFIG.ANIMATION_DELAYS.PREFACE_RELEASE_MS);
-      }, CONFIG.ANIMATION_DELAYS.PREFACE_PHASE_2_MS);
-    },
-
-    releasePage() {
-      LifecycleManager.setState('RELEASED');
-      DOM.prefaceBox?.classList.add('prefacio-abertura-encerrada');
-      DOM.body.classList.add('prefacio-em-saida');
-      DOM.root.classList.add('prefacio-em-saida');
-
-      window.setTimeout(() => {
-        DOM.body.classList.remove('prefacio-em-foco', 'prefacio-em-saida');
-        DOM.root.classList.remove('prefacio-em-foco', 'prefacio-em-saida');
-        DOM.body.classList.add('pagina-inicial-liberada');
-        DOM.root.classList.add('pagina-inicial-liberada');
-
-        if (DOM.prefaceBox) {
-          DOM.prefaceBox.style.visibility = 'visible';
-          DOM.prefaceBox.style.opacity = '1';
-        }
-
-        DOM.readingProgress?.classList.add('is-visible');
-        ScrollController.update();
-      }, CONFIG.ANIMATION_DELAYS.PREFACE_TRANSITION_END_MS);
     }
   };
 
@@ -387,7 +398,7 @@
       DOM.homeLoadingBar.style.width = '0%';
 
       const startTime = performance.now();
-      const duration = CONFIG.ANIMATION_DELAYS.LOGO_REFRESH_DURATION_MS;
+      const duration = CONFIG.INTRO_TIMINGS.LOGO_REFRESH_DURATION_MS;
 
       const step = (now) => {
         const progress = Math.min((now - startTime) / duration, 1);
@@ -481,10 +492,12 @@
     if (LifecycleManager.isDirectEntryValid()) {
       ViewController.executeDirectEntry();
     } else {
-      ViewController.startPrefaceSequence();
+      ViewController.startIntroSequence();
     }
 
     window.addEventListener('load', () => ScrollController.update());
+    // AJUSTE 4: recalcula somente o alinhamento horizontal quando a viewport muda.
+    window.addEventListener('resize', () => ViewController.syncIntroToHome());
   };
 
   if (document.readyState === 'loading') {
