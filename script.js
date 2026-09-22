@@ -257,6 +257,7 @@
       if (isBlocked) {
         if (DOM.topo) {
           DOM.topo.style.setProperty('--topo-progresso', '0');
+          DOM.topo.style.setProperty('--reading-progresso', '0');
           DOM.topo.classList.remove('is-scrolled');
         }
         if (DOM.readingProgress) {
@@ -287,6 +288,7 @@
         const readingRatio = totalHeight > 0 ? Math.min(currentScroll / totalHeight, 1) : 0;
         DOM.readingProgress.style.width = `${(readingRatio * 100).toFixed(2)}%`;
         DOM.readingProgress.classList.add('is-visible');
+        DOM.topo?.style.setProperty('--reading-progresso', readingRatio.toFixed(3));
       }
     };
 

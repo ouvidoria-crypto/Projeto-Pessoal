@@ -615,6 +615,7 @@ html body .manifesto-box.prefacio-home-final {
   box-sizing: border-box;
   line-height: 1.2;
   --topo-progresso: 0;
+  --reading-progresso: 0;
   padding: calc(8px - (4px * var(--topo-progresso))) 0;
   border-top-width: calc(1px - (1px * var(--topo-progresso)));
   box-shadow: 0 6px 14px rgba(0, 0, 0, calc(0.14 - (0.02 * var(--topo-progresso))));
@@ -1146,11 +1147,12 @@ h1 {
   margin: 0;
   background: linear-gradient(90deg, #0b5d4f, #91a63a, #d9c46a);
   background-size: 220% 220%;
+  background-position: calc(var(--reading-progresso) * 100%) 50%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  animation: brilhoTitulo 6s linear infinite;
+  transition: background-position 0.16s linear;
 }
 
 .titulo-principal p {
@@ -1161,11 +1163,12 @@ h1 {
   white-space: nowrap;
   background: linear-gradient(90deg, #899b84 0%, #dfe8d8 25%, #d3d6d1 50%, #dfe8d8 75%, #899b84 100%);
   background-size: 220% 220%;
+  background-position: calc(var(--reading-progresso) * 100%) 50%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  animation: brilhoTitulo 7s linear infinite reverse;
+  transition: background-position 0.16s linear;
 }
 
 .titulo-principal p .bandeira-brasil {
