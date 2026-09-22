@@ -1319,7 +1319,7 @@ main:nth-of-type(1) > section:nth-of-type(4) > div:nth-of-type(1) > article:nth-
   box-sizing: border-box;
   transform: none !important;
   filter: none;
-  background: #ADD8E6;
+  background: #0f1f2fa6;
 }
 
 .member-body {
