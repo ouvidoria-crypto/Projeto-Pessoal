@@ -422,7 +422,7 @@ body.page-end-fade-hidden::after {
 
   .titulo-principal p {
     white-space: normal;
-    font-size: clamp(0.95rem, 4.1vw, 1.4rem);
+    font-size: clamp(0.82rem, 3.2vw, 1.15rem);
     text-align: center;
     line-height: 1.2;
   }
@@ -1135,8 +1135,11 @@ body.home-carregando .home-loading-bar {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  text-align: left;
 }
 
+header:nth-of-type(1) > div:nth-of-type(3) > h1:nth-of-type(1),
+.titulo-principal h1,
 h1 {
   font-family: "Oswald", sans-serif;
   font-weight: 400;
@@ -1145,6 +1148,10 @@ h1 {
   text-align: left;
   white-space: nowrap;
   margin: 0;
+  padding: 0;
+  padding-left: 0;
+  margin-left: 0;
+  align-self: flex-start;
   background: linear-gradient(90deg, #0b5d4f, #91a63a, #d9c46a);
   background-size: 220% 220%;
   background-position: calc(var(--reading-progresso) * 100%) 50%;
@@ -1155,12 +1162,18 @@ h1 {
   transition: background-position 0.16s linear;
 }
 
+header:nth-of-type(1) > div:nth-of-type(3) > p:nth-of-type(1),
 .titulo-principal p {
-  margin: 1px 0 0;
+  margin: 2px 0 0 0;
+  padding: 0;
+  padding-left: 0;
+  margin-left: 0;
+  align-self: flex-start;
   font-family: "Oswald", sans-serif;
-  font-size: calc(30px - (12px * var(--topo-progresso)));
+  font-size: calc(22px - (9px * var(--topo-progresso)));
   text-align: left;
   white-space: nowrap;
+  letter-spacing: 0.02em;
   background: linear-gradient(90deg, #899b84 0%, #dfe8d8 25%, #d3d6d1 50%, #dfe8d8 75%, #899b84 100%);
   background-size: 220% 220%;
   background-position: calc(var(--reading-progresso) * 100%) 50%;
@@ -1588,7 +1601,7 @@ main:nth-of-type(1) > section:nth-of-type(4) > div:nth-of-type(1) > article:nth-
   }
 
   .titulo-principal p {
-    font-size: clamp(1.2rem, 2.5vw, 2rem);
+    font-size: clamp(0.95rem, 1.8vw, 1.45rem);
   }
 }
 
