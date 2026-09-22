@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Esmeralda 3D - Vetorizada</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --verde: #1dd173;
+      --verde-escuro: #002b15;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      background: var(--bg);
+    }
+  </style>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+      }
+    }
+  </script>
+</head>
+<body>
+  <script type="module">
+    import * as THREE from 'three';
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xffffff);
+
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 18;
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    document.body.appendChild(renderer.domElement);
+
+    const shape = new THREE.Shape();
+
+    shape.moveTo(-1.2, 3);
+    shape.lineTo(1.2, 3);
+    shape.lineTo(2.6, 1.4);
+    shape.lineTo(2.6, -1.4);
+    shape.lineTo(1.2, -3);
+    shape.lineTo(-1.2, -3);
+    shape.lineTo(-2.6, -1.4);
+    shape.lineTo(-2.6, 1.4);
+    shape.lineTo(-1.2, 3);
+
+    const extrudeSettings = {
+      depth: 1.5,
+      bevelEnabled: true,
+      bevelSegments: 2,
+      steps: 1,
+      bevelSize: 1.2,
+      bevelThickness: 1.0
+    };
+
+    const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+    geometry.center();
+
+    const emeraldGroup = new THREE.Group();
+
+    const material = new THREE.MeshPhongMaterial({
+      color: 0x1dd173,
+      emissive: 0x004d26,
+      emissiveIntensity: 0.3,
+      shininess: 40,
+      flatShading: true,
+      side: THREE.DoubleSide
+    });
+
+    const emeraldMesh = new THREE.Mesh(geometry, material);
+    emeraldGroup.add(emeraldMesh);
+
+    const edgesGeometry = new THREE.EdgesGeometry(geometry);
+    const lineMaterial = new THREE.LineBasicMaterial({
+      color: 0x002b15,
+      linewidth: 2
+    });
+
+    const edgesLines = new THREE.LineSegments(edgesGeometry, lineMaterial);
+    emeraldGroup.add(edgesLines);
+
+    emeraldGroup.scale.set(0.9, 0.9, 0.9);
+    scene.add(emeraldGroup);
+
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambientLight);
+
+    const mainLight = new THREE.DirectionalLight(0xffffff, 1.2);
+    mainLight.position.set(5, 10, 10);
+    scene.add(mainLight);
+
+    const fillLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    fillLight.position.set(-5, -5, -5);
+    scene.add(fillLight);
+
+    const clock = new THREE.Clock();
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const time = clock.getElapsedTime();
+
+      emeraldGroup.position.y = Math.sin(time * 0.8) * 0.4;
+      emeraldGroup.rotation.y = time * 0.2;
+      emeraldGroup.rotation.x = Math.sin(time * 0.3) * 0.1;
+
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    animate();
+  </script>
+</body>
+</html>

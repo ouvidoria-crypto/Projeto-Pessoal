@@ -9,6 +9,8 @@
 
 html {
   /* Reserva a barra de rolagem para evitar deslocamento lateral na liberação. */
+  width: 100%;
+  max-width: 100%;
   margin: 0;
   scroll-behavior: auto;
   scrollbar-gutter: stable;
@@ -21,6 +23,8 @@ img {
 body {
   /* O fundo da Home permanece montado por trás do overlay durante a introdução. */
   position: relative;
+  width: 100%;
+  max-width: 100%;
   overflow-x: hidden;
   background-color: #dfe8d8;
   background-image: linear-gradient(180deg, rgba(14, 30, 40, 0.12), rgba(14, 30, 40, 0.22));
@@ -344,7 +348,14 @@ body::after {
   pointer-events: none;
   background: linear-gradient(180deg, rgba(145, 122, 70, 0) 0%, rgba(145, 122, 70, 0.06) 28%, rgba(145, 122, 70, 0.18) 100%);
   filter: blur(6px);
+  opacity: 1;
+  transition: opacity 0.22s ease, filter 0.22s ease;
   z-index: 10;
+}
+
+body.page-end-fade-hidden::after {
+  opacity: 0;
+  filter: blur(0);
 }
 
 .reveal {
@@ -1185,6 +1196,335 @@ h1 {
   100% {
     background-position: 0% 50%;
     filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0));
+  }
+}
+
+.editorial-breath,
+.footer-breath {
+  width: 100%;
+  height: 100px;
+  display: block;
+}
+
+.team-section {
+  width: min(920px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 0;
+  color: #dfe8d8;
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 26px;
+}
+
+.team-grid--single {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.member-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.member-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
+}
+
+.member-card--featured {
+  display: grid;
+  grid-template-columns: minmax(140px, 180px) minmax(0, 1fr);
+  align-items: stretch;
+  border-radius: 22px !important;
+  width: min(100%, 400px);
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.member-photo {
+  position: relative;
+  aspect-ratio: 4 / 4.8;
+  background: linear-gradient(135deg, rgba(129, 139, 126, 0.8), rgba(230, 223, 202, 0.72), rgba(84, 107, 120, 0.95));
+  overflow: hidden;
+  border-radius: 18px 0 0 18px;
+}
+
+.member-photo::before {
+  content: "";
+  position: absolute;
+  inset: 18% 24% 12% 24%;
+  border-radius: 50% 50% 42% 42% / 44% 44% 56% 56%;
+  background: rgba(255, 255, 255, 0.36);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.member-photo--featured {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 4 / 4.8;
+  object-fit: cover;
+  object-position: center top;
+  background: linear-gradient(135deg, rgba(146, 155, 96, 0.86), rgba(241, 230, 198, 0.72), rgba(33, 46, 60, 0.95));
+  border-radius: 18px 0 0 18px;
+}
+
+.member-photo--brand {
+  display: block;
+  width: calc(100% + 0.45rem);
+  height: calc(100% + 0.45rem);
+  object-fit: contain;
+  object-position: center center;
+  background: radial-gradient(circle at center, rgba(217, 196, 106, 0.15), rgba(11, 93, 79, 0.18) 38%, rgba(10, 22, 29, 0.72) 100%);
+  padding: 0;
+  margin: -0.18rem 0 -0.18rem -0.18rem;
+  transform: scale(0.9);
+  transform-origin: center;
+  filter: none;
+  border-radius: 22px 0 0 22px !important;
+}
+
+.member-photo--one {
+  background: linear-gradient(135deg, rgba(92, 110, 109, 0.9), rgba(197, 204, 175, 0.8), rgba(54, 73, 82, 0.95));
+}
+
+.member-photo--two {
+  background: linear-gradient(135deg, rgba(118, 102, 76, 0.85), rgba(210, 199, 171, 0.8), rgba(72, 90, 90, 0.95));
+}
+
+.member-photo--three {
+  background: linear-gradient(135deg, rgba(98, 110, 122, 0.85), rgba(214, 210, 202, 0.75), rgba(71, 86, 78, 0.9));
+}
+
+.member-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 18px 18px 20px;
+  border-radius: 0 18px 18px 0;
+}
+
+.member-name {
+  margin: 0 0 6px;
+  font-family: "Merriweather", serif;
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  color: #ffffff;
+  line-height: 1.35;
+}
+
+.member-role {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(223, 232, 216, 0.8);
+}
+
+.member-bio {
+  margin: 12px 0 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(223, 232, 216, 0.82);
+}
+
+.rodape-principal {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(15, 31, 47, 0.97), rgba(8, 47, 73, 0.94));
+  border-top: 1px solid rgba(26, 25, 25, 0.8);
+  box-shadow: 0 -4px 10px rgba(8, 47, 73, 0.12);
+  color: #d5e7eb;
+}
+
+.rodape-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  width: min(1200px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 1.75rem 0;
+  gap: 1.5rem;
+}
+
+.rodape-marca {
+  display: flex;
+  flex: 1.6;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.rodape-titulo {
+  margin: 0;
+  font-family: "Oswald", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #dfe8d8;
+  font-size: clamp(1.15rem, 2vw, 1.6rem);
+  line-height: 1.1;
+}
+
+.rodape-copy {
+  margin: 0;
+  font-family: "Merriweather", serif;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #d5e7eb;
+}
+
+.rodape-links {
+  display: flex;
+  flex: 0.8;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.55rem;
+}
+
+.rodape-links a {
+  color: #d5e7eb;
+  text-decoration: none;
+  font-family: "Oswald", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.rodape-links a:hover,
+.rodape-links a:focus-visible {
+  color: #d9c46a;
+  transform: translateY(-2px);
+}
+
+.rodape-sociais {
+  display: flex;
+  flex: 0.8;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.rodape-sociais a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: #d5e7eb;
+  text-decoration: none;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.rodape-sociais a:hover,
+.rodape-sociais a:focus-visible {
+  color: #d9c46a;
+  transform: translateY(-2px);
+}
+
+.rodape-sociais svg {
+  display: block;
+  width: 1.2rem;
+  height: 1.2rem;
+  fill: currentColor;
+}
+
+@media (max-width: 768px) {
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .rodape-principal {
+    width: 100% !important;
+    min-height: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    border-top: 1px solid rgba(26, 25, 25, 0.8) !important;
+    box-shadow: 0 -4px 10px rgba(8, 47, 73, 0.12) !important;
+  }
+
+  .rodape-container {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 12px !important;
+    width: min(100%, calc(100% - 24px)) !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 18px 0 12px !important;
+    text-align: center !important;
+  }
+
+  .rodape-marca,
+  .rodape-links,
+  .rodape-sociais {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  .rodape-marca {
+    flex-direction: column !important;
+    gap: 0.7rem !important;
+  }
+
+  .rodape-links {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  .rodape-sociais {
+    flex-direction: row !important;
+    gap: 16px !important;
+    justify-content: center !important;
+  }
+
+  .rodape-titulo {
+    font-size: clamp(1.05rem, 4.8vw, 1.45rem) !important;
+    letter-spacing: 0.06em !important;
+    line-height: 1.15 !important;
+  }
+
+  .rodape-copy {
+    font-size: 11px !important;
+    line-height: 1.4 !important;
+    text-align: center !important;
+    color: #d5e7eb !important;
+  }
+
+  .rodape-sociais a {
+    width: 42px !important;
+    height: 42px !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    background: rgba(255, 255, 255, 0.02) !important;
+  }
+
+  .rodape-sociais svg {
+    width: 18px !important;
+    height: 18px !important;
   }
 }
 
