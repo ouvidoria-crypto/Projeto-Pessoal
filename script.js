@@ -309,7 +309,9 @@
 
     return {
       init: () => window.addEventListener('scroll', onScroll, { passive: true }),
-      update: () => window.requestAnimationFrame(updateMetrics)
+      update: () => window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => updateMetrics(getScrollTop(), lastScrollY));
+      })
     };
   })();
 
@@ -464,6 +466,7 @@
       DOM.body.classList.add('home-carregando');
       DOM.readingProgress?.style.setProperty('width', '0%');
       DOM.readingProgress?.classList.remove('is-visible');
+      DOM.topo?.style.setProperty('--reading-progresso', '0');
       DOM.homeLoadingBar.style.width = '0%';
 
       const startTime = performance.now();
@@ -565,6 +568,7 @@
     }
 
     window.addEventListener('load', () => ScrollController.update());
+    window.addEventListener('pageshow', () => ScrollController.update());
     // AJUSTE 4: recalcula somente o alinhamento horizontal quando a viewport muda.
     window.addEventListener('resize', () => ViewController.syncIntroToHome());
   };
