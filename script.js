@@ -249,7 +249,7 @@
 
     const getScrollTop = () => (document.scrollingElement || DOM.root).scrollTop;
 
-    const updateMetrics = () => {
+    const updateMetrics = (currentScroll = getScrollTop(), previousScrollY = lastScrollY) => {
       const isBlocked = DOM.body.classList.contains('prefacio-em-foco') ||
                         DOM.body.classList.contains('prefacio-em-saida') ||
                         DOM.body.classList.contains('home-carregando');
@@ -263,10 +263,16 @@
           DOM.readingProgress.style.width = '0%';
           DOM.readingProgress.classList.remove('is-visible');
         }
+        DOM.body.classList.remove('page-end-fade-hidden');
         return;
       }
 
-      const currentScroll = getScrollTop();
+      // Fim da página: oculta o degradê quando o usuário está no rodapé e continua descendo.
+      const scrollEl = document.scrollingElement || DOM.root;
+      const maxScroll = Math.max(scrollEl.scrollHeight - scrollEl.clientHeight, 0);
+      const isNearBottom = maxScroll > 0 && currentScroll >= maxScroll - 32;
+      const isScrollingDown = currentScroll > previousScrollY;
+      DOM.body.classList.toggle('page-end-fade-hidden', isNearBottom && isScrollingDown);
 
       // Topo progress
       if (DOM.topo) {
@@ -277,7 +283,6 @@
 
       // Reading progress bar
       if (DOM.readingProgress) {
-        const scrollEl = document.scrollingElement || DOM.root;
         const totalHeight = scrollEl.scrollHeight - scrollEl.clientHeight;
         const readingRatio = totalHeight > 0 ? Math.min(currentScroll / totalHeight, 1) : 0;
         DOM.readingProgress.style.width = `${(readingRatio * 100).toFixed(2)}%`;
@@ -286,13 +291,14 @@
     };
 
     const onScroll = () => {
+      const previousScrollY = lastScrollY;
       const scrollY = window.scrollY || DOM.root.scrollTop || 0;
       if (scrollY === lastScrollY) return;
       lastScrollY = scrollY;
 
       if (!isTicking) {
         window.requestAnimationFrame(() => {
-          updateMetrics();
+          updateMetrics(scrollY, previousScrollY);
           isTicking = false;
         });
         isTicking = true;
