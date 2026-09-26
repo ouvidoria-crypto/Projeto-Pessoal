@@ -12,12 +12,24 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="O DESTINO" />
   <meta name="twitter:description" content="Reflexão crítica sobre a origem, a estrutura e os caminhos de transformação do Brasil." />
-  <link rel="stylesheet" href="style.css?v=94" />
+  <script>
+    (() => {
+      try {
+        if (new URLSearchParams(window.location.search).get('entrada-direta') === '1') {
+          document.documentElement.classList.add('entrada-direta');
+        }
+      } catch (error) {
+        // Mantém a entrada normal se a URL não puder ser lida.
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="style.css?v=96" />
   <link rel="icon" type="image/png" href="OP.png" />
-  <script src="script.js?v=40" defer></script>
+  <link rel="preload" href="TESTE.mp4" as="video" type="video/mp4" />
+  <script src="script.js?v=42" defer></script>
   <!-- TESTE-LOGO:INICIO (experimento — para remover, apague este bloco e os arquivos teste-logo.css / teste-logo.js) -->
-  <link rel="stylesheet" href="teste-logo.css?v=1" />
-  <script src="teste-logo.js?v=1" defer></script>
+  <link rel="stylesheet" href="teste-logo.css?v=2" />
+  <script src="teste-logo.js?v=2" defer></script>
   <!-- TESTE-LOGO:FIM -->
   <title>O DESTINO</title>
 </head>
@@ -102,6 +114,7 @@
       <div class="conta-acoes">
         <button class="conta-botao conta-entrar" type="button" data-conta-acao="entrar">Entrar</button>
         <button class="conta-botao conta-cadastrar" type="button" data-conta-acao="cadastrar">Cadastrar</button>
+        <button class="conta-botao conta-sair" type="button" data-conta-acao="sair" hidden>Sair</button>
       </div>
       <button class="google-botao" type="button" data-conta-acao="google">
         <span class="google-marca" aria-hidden="true">G</span>

@@ -651,6 +651,11 @@ body:not(.pagina-inicial-liberada) .menu-toggle {
   pointer-events: none;
 }
 
+html.entrada-direta body:not(.pagina-inicial-liberada) .menu-toggle {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .menu-toggle[aria-expanded="true"] {
   opacity: 0;
   pointer-events: none;
@@ -3243,6 +3248,10 @@ html.intro-is-active {
   transition: opacity 0.7s ease, background-color 1.2s ease, color 1.2s ease;
 }
 
+html.entrada-direta .intro-overlay {
+  display: none !important;
+}
+
 body,
 body::before {
   transition: background-color 1.2s ease, opacity 1.2s ease, filter 1.2s ease;
@@ -3570,6 +3579,10 @@ html.intro-phase-2 {
   .intro-overlay__text-box,
   .intro-overlay__accordion {
     transition-duration: 0.01ms;
+  }
+
+  .intro-overlay__logo {
+    animation: none;
   }
 }
 

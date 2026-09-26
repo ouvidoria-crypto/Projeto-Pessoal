@@ -190,9 +190,8 @@
       if (active && topo?.classList.contains('teste-logo-desloca')) setDesloca(true);
     });
 
-    // Autoplay: só quando a página abriu com a intro (Splash -> Fase 1 -> Fase 2 -> Home).
-    // Em "entrada direta" (recarregar pela logo) a intro é pulada e o autoplay também.
-    if (AUTOPLAY_APOS_INTRO && document.querySelector('.intro-overlay')) {
+    // Autoplay: começa assim que a Home estiver liberada, com ou sem a intro.
+    if (AUTOPLAY_APOS_INTRO) {
       const startAutoplay = () => {
         const begin = () => activate({ auto: true, zoom: AUTOPLAY_COM_ZOOM });
         if (begin()) return;

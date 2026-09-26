@@ -19,7 +19,7 @@
 
 /* 1) Remove o brilho contínuo e os efeitos de hover antigos da logo do cabeçalho. */
 .logo {
-  animation: none !important;
+  animation: brilhoLogo 4s ease-in-out infinite !important;
   will-change: auto !important;
   filter: none !important;
   transform-origin: var(--teste-logo-origem) !important;
@@ -85,6 +85,7 @@ html .topo .logo-wrap.teste-logo-zoom .logo {
 .logo-wrap.teste-logo-zoom .teste-logo-video {
   transform: scale(var(--teste-logo-zoom));
 }
+
 
 /* 5) Trigger do título: ao passar o mouse na logo, "CREPÚSCULO ESMERALDA" e "Movidos pelo potencial..."
       deslocam juntos para o lado (só no layout desktop). O valor real (--teste-logo-desloca-px)

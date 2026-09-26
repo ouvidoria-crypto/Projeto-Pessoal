@@ -19,7 +19,6 @@
   // =========================================================================
   const CONFIG = Object.freeze({
     STORAGE_KEY: 'crepusculo-entrada-direta',
-    STORAGE_TTL_MS: 4000,
     SCROLL_TRANSITION_THRESHOLD: 120,
     INTRO_TIMINGS: Object.freeze({
       SPLASH_MS: 900,
@@ -46,11 +45,15 @@
 
     const isDirectEntryValid = () => {
       try {
+        const url = new URL(window.location.href);
+        const directEntryParam = url.searchParams.get('entrada-direta') === '1';
+        if (directEntryParam) {
+          url.searchParams.delete('entrada-direta');
+          window.history.replaceState(window.history.state, '', `${url.pathname}${url.search}${url.hash}`);
+        }
         const raw = sessionStorage.getItem(CONFIG.STORAGE_KEY);
         sessionStorage.removeItem(CONFIG.STORAGE_KEY);
-        if (!raw) return false;
-        const diff = Date.now() - Number(raw);
-        return !Number.isNaN(diff) && diff >= 0 && diff < CONFIG.STORAGE_TTL_MS;
+        return directEntryParam || Boolean(raw);
       } catch {
         return false;
       }
@@ -103,6 +106,7 @@
     accountFormTitle: document.querySelector('.conta-form-titulo'),
     accountNameField: document.querySelector('.conta-nome-campo'),
     accountSubmit: document.querySelector('.conta-form-submit'),
+    accountLogout: document.querySelector('[data-conta-acao="sair"]'),
     audioTheme: document.getElementById('tema-audio'),
     revealElements: document.querySelectorAll('.reveal'),
     // AJUSTE 2: o prefácio não participa das interações de toque; seu tamanho e estado são fixos.
@@ -407,18 +411,47 @@
     },
 
     initAccountActions() {
+      let isRegister = false;
+
+      const setStatus = (message) => {
+        if (DOM.accountStatus) DOM.accountStatus.textContent = message;
+      };
+
+      const updateAccountState = (user) => {
+        const loggedIn = Boolean(user);
+        document.querySelectorAll('.conta-entrar, .conta-cadastrar, .google-botao').forEach((button) => {
+          button.hidden = loggedIn;
+        });
+        if (DOM.accountLogout) DOM.accountLogout.hidden = !loggedIn;
+        if (DOM.accountForm && loggedIn) {
+          DOM.accountForm.hidden = true;
+          DOM.sidebarAccount?.classList.remove('is-expandida');
+        }
+        if (DOM.accountStatus) {
+          DOM.accountStatus.textContent = loggedIn
+            ? `Conectado como ${user.name || user.email || 'usuário'}.`
+            : 'Entre para acompanhar novas publicações.';
+        }
+      };
+
+      fetch('/api/auth/me').then((response) => response.json()).then(({ user }) => updateAccountState(user));
+
       document.querySelectorAll('[data-conta-acao]').forEach((btn) => {
         btn.addEventListener('click', () => {
           const action = btn.dataset.contaAcao;
           if (action === 'google') {
-            if (DOM.accountStatus) {
-              DOM.accountStatus.textContent = 'A entrada com Google será conectada ao provedor de autenticação.';
-            }
+            setStatus('Abrindo o login do Google...');
+            window.location.assign('/api/auth/google');
+            return;
+          }
+
+          if (action === 'sair') {
+            fetch('/api/auth/logout', { method: 'POST' }).then(() => updateAccountState(null));
             return;
           }
 
           if (!DOM.accountForm || !DOM.accountFormTitle || !DOM.accountSubmit || !DOM.sidebarAccount) return;
-          const isRegister = action === 'cadastrar';
+          isRegister = action === 'cadastrar';
 
           DOM.sidebarAccount.classList.add('is-expandida');
           DOM.accountForm.hidden = false;
@@ -439,9 +472,28 @@
 
       DOM.accountForm?.addEventListener('submit', (e) => {
         e.preventDefault();
-        if (DOM.accountStatus) {
-          DOM.accountStatus.textContent = 'Formulário pronto para conectar ao sistema de autenticação.';
-        }
+        const formData = new FormData(DOM.accountForm);
+        const email = String(formData.get('email') || '').trim();
+        const password = String(formData.get('senha') || '');
+        const name = String(formData.get('nome') || '').trim();
+        if (!email || !password) return;
+
+        DOM.accountSubmit.disabled = true;
+        setStatus(isRegister ? 'Criando sua conta...' : 'Entrando...');
+        const request = isRegister
+          ? fetch('/api/auth/signup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, password }) })
+          : fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
+
+        request.then(async (response) => ({ response, payload: await response.json() })).then(({ response, payload }) => {
+          DOM.accountSubmit.disabled = false;
+          if (!response.ok) {
+            setStatus(payload.error || 'Não foi possível concluir a autenticação.');
+            return;
+          }
+          DOM.accountForm.reset();
+          updateAccountState(payload.user);
+          setStatus(isRegister ? 'Conta criada com sucesso.' : 'Login realizado com sucesso.');
+        });
       });
     }
   };
@@ -478,7 +530,9 @@
         if (progress < 1) {
           window.requestAnimationFrame(step);
         } else {
-          window.location.reload();
+          const url = new URL(window.location.href);
+          url.searchParams.set('entrada-direta', '1');
+          window.location.assign(url.href);
         }
       };
 
